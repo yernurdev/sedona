@@ -16,7 +16,9 @@ const wrap = (el: React.ReactNode) => <Layout>{el}</Layout>
 
 function ScrollTop() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return null
 }
 
