@@ -21,7 +21,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
       </SectionTitle>
       <div className="grid gap-4 md:grid-cols-3">
         {p.insurance.options.map((o) => (
-          <div key={o.type} className={o.type === p.insurance.cheapest ? 'retro-card p-5' : 'retro-card-soft p-5'}>
+          <div key={o.type} className={o.type === p.insurance.cheapest ? 'retro-card p-6 ring-2 ring-brand' : 'retro-card-soft p-6'}>
             <div className="flex items-center justify-between gap-2">
               <div className="font-semibold">{o.label}</div>
               {o.type === p.insurance.cheapest && <Tag tone="brand">lowest cost</Tag>}
@@ -38,7 +38,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
         ))}
       </div>
       <div className="retro-card-soft mt-5 p-5">
-        <div className="mono-label text-brand">Insider move</div>
+        <div className="text-[13px] font-medium text-brand-deep">Insider move</div>
         <p className="mt-1">COBRA can be elected retroactively. If nothing happens during your election window, you may never pay for it; if something does, elect and pay back to the day your coverage ended. Many people use this window while their Marketplace plan starts.</p>
       </div>
       {aca?.quotes && (
@@ -51,7 +51,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
               </thead>
               <tbody className="num">
                 {aca.quotes.map((q) => (
-                  <tr key={q.year} className="border-t border-dashed border-line">
+                  <tr key={q.year} className="border-t border-ink/[.06]">
                     <td className="py-2">{q.year}</td><td>{usd(q.magi)}</td><td>{q.fplPct}%</td><td>{usd(q.benchmarkMonthly)}</td><td>{usd(q.subsidyMonthly)}</td><td className="font-bold">{usd(q.netMonthly)}</td>
                   </tr>
                 ))}
@@ -82,7 +82,7 @@ function Runway({ p, caseId }: { p: PlanT; caseId: string }) {
       <SectionTitle kicker="Runway" title={`${p.runway.months.toFixed(1)} months of cash`}>Week by week, assuming no new job. Switch the insurance option to see the difference.</SectionTitle>
       <div className="mb-4 flex flex-wrap gap-2">
         {Object.keys(p.runway.byOption).map((k) => (
-          <button key={k} onClick={() => setOpt(k)} className={`rounded-full border px-4 py-1.5 text-sm ${opt === k ? 'border-ink bg-ink text-cream' : 'border-line bg-white'}`}>
+          <button key={k} onClick={() => setOpt(k)} className={`rounded-full border px-4 py-1.5 text-sm ${opt === k ? 'border-ink bg-ink text-white' : 'border-ink/10 bg-white'}`}>
             {optionName[k]} · <span className="num">{p.runway.byOption[k].months.toFixed(1)} mo</span>
           </button>
         ))}
@@ -128,10 +128,10 @@ function Deadlines({ p, caseId }: { p: PlanT; caseId: string }) {
         <a className="btn btn-primary btn-sm" href={icsUrl}><CalendarPlus className="size-4" /> Add to calendar (.ics)</a>
         <span className="self-center text-xs text-ink-soft">Includes a recurring reminder for your weekly unemployment request. Import into Google Calendar via Settings → Import.</span>
       </div>
-      <ol className="relative space-y-3 border-l-2 border-dashed border-ink/30 pl-6">
+      <ol className="relative space-y-3 border-l border-ink/10 pl-6">
         {p.deadlines.map((d) => (
           <li key={d.id} className={`relative ${d.passed ? 'opacity-50' : ''}`}>
-            <span className={`absolute -left-[33px] top-4 size-4 rounded-full border-2 border-ink ${d.severity === 'high' ? 'bg-wine' : d.severity === 'medium' ? 'bg-sky' : 'bg-cream'}`} />
+            <span className={`absolute -left-[31px] top-5 size-3 rounded-full ring-4 ring-cream ${d.severity === 'high' ? 'bg-wine' : d.severity === 'medium' ? 'bg-brand' : 'bg-ink/20'}`} />
             <div className="retro-card-soft p-4">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <div className="font-semibold">{d.title}</div>
@@ -196,7 +196,7 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
         <div className="retro-card-soft p-5">
           <dl className="num space-y-1 text-sm">
             {[['Gross', s.gross], ['Federal (22% supplemental)', -s.federalWithheld], ['FICA (7.65%)', -s.fica], ['State', -s.stateWithheld]].map(([k, v]) => (
-              <div key={k as string} className="flex justify-between border-b border-dashed border-line py-1.5"><dt className="font-sans text-ink-soft">{k}</dt><dd>{usd(v as number)}</dd></div>
+              <div key={k as string} className="flex justify-between border-b border-ink/[.06] py-1.5"><dt className="font-sans text-ink-soft">{k}</dt><dd>{usd(v as number)}</dd></div>
             ))}
             <div className="flex justify-between py-1.5 font-bold"><dt className="font-sans">Net estimate</dt><dd>{usd(s.netEstimate)}</dd></div>
           </dl>
@@ -209,12 +209,12 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
           <div className="mt-3 flex flex-wrap gap-2">
             {asks.map(([id, label]) => (
               <button key={id} onClick={() => setSel((x) => (x.includes(id) ? x.filter((y) => y !== id) : [...x, id]))}
-                className={`rounded-full border px-3 py-1 text-sm ${sel.includes(id) ? 'border-ink bg-sky' : 'border-line bg-white'}`}>{label}</button>
+                className={`rounded-full border px-3 py-1 text-sm ${sel.includes(id) ? 'border-brand bg-brand-soft text-brand-deep' : 'border-ink/10 bg-white'}`}>{label}</button>
             ))}
           </div>
           <div className="mt-3 flex gap-2">
             {(['polite', 'firm'] as const).map((t) => (
-              <button key={t} onClick={() => setTone(t)} className={`mono-label rounded-full border px-3 py-1 ${tone === t ? 'border-ink bg-ink text-cream' : 'border-line'}`}>{t}</button>
+              <button key={t} onClick={() => setTone(t)} className={`mono-label rounded-full border px-3 py-1 ${tone === t ? 'border-ink bg-ink text-white' : 'border-ink/10'}`}>{t}</button>
             ))}
           </div>
           <button className="btn btn-primary btn-sm mt-4" onClick={() => letter.mutate()} disabled={letter.isPending || sel.length === 0}>
@@ -222,7 +222,7 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
           </button>
           {letter.error && <div className="mt-3"><ErrorBox error={letter.error} onRetry={() => letter.mutate()} /></div>}
           {letter.data && (
-            <div className="mt-4 rounded-2xl bg-cream-deep/70 p-4 text-sm">
+            <div className="mt-4 rounded-2xl bg-cream p-4 text-sm">
               <div className="font-semibold">Subject: {letter.data.subject}</div>
               <p className="mt-2 whitespace-pre-line">{letter.data.body}</p>
               <button className="btn btn-ghost btn-sm mt-3" onClick={() => { navigator.clipboard.writeText(`Subject: ${letter.data!.subject}\n\n${letter.data!.body}`); setCopied(true) }}>
@@ -245,7 +245,7 @@ function Actions({ p, caseId }: { p: PlanT; caseId: string }) {
       <div className="grid gap-4 md:grid-cols-3">
         {cols.map(([t, items]) => (
           <div key={t} className="retro-card-soft p-5">
-            <div className="mono-label text-brand">{t}</div>
+            <div className="text-[13px] font-medium text-brand-deep">{t}</div>
             <ul className="mt-3 space-y-2 text-sm">{items.length ? items.map((i) => <li key={i}>☐ {i}</li>) : <li className="text-ink-soft">Nothing due.</li>}</ul>
           </div>
         ))}
@@ -292,7 +292,7 @@ export default function Plan() {
   const p = q.data!
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-6 flex gap-1 overflow-x-auto rounded-full border border-ink bg-white p-1 [scrollbar-width:none]">
+      <div className="mb-8 flex gap-1 overflow-x-auto rounded-full border border-ink/[.07] bg-white p-1 [scrollbar-width:none]">
         {tabs.map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'bg-brand text-white' : 'hover:bg-cream-deep'}`}>
             {t}

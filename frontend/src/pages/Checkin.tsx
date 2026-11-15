@@ -81,17 +81,17 @@ export default function Checkin() {
           </div>
           <div className="mt-4 flex gap-2">
             <div className="relative flex-1">
-              <Link2 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-soft" />
-              <input className="field pl-9" placeholder="Paste a job link — we fill the rest" value={link} onChange={(e) => setLink(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addFromLink()} />
+              <Link2 className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-soft" />
+              <input className="field pl-10" placeholder="Paste a job posting link" value={link} onChange={(e) => setLink(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addFromLink()} />
             </div>
-            <button className="btn btn-sky btn-sm" onClick={addFromLink}><Plus className="size-4" /> Add</button>
+            <button className="btn btn-dark" onClick={addFromLink}><Plus className="size-4" /> Add</button>
           </div>
-          <button className="mono-label mt-2 text-ink-soft underline" onClick={() => setActs((a) => [...a, { date: today, employer: '', position: '', method: 'online', contact: '', result: 'applied' }])}>
+          <button className="mt-2 text-[13px] font-medium text-brand-deep hover:text-brand" onClick={() => setActs((a) => [...a, { date: today, employer: '', position: '', method: 'online', contact: '', result: 'applied' }])}>
             or add manually
           </button>
           <div className="mt-4 space-y-3">
             {acts.map((a, i) => (
-              <div key={i} className="grid gap-2 rounded-2xl border border-line bg-white p-3 sm:grid-cols-6">
+              <div key={i} className="grid gap-2 rounded-2xl border border-ink/[.07] bg-cream/50 p-3 sm:grid-cols-6">
                 <input className="field sm:col-span-2" placeholder="Employer" value={a.employer} onChange={(e) => upd(i, 'employer', e.target.value)} />
                 <input className="field sm:col-span-2" placeholder="Position" value={a.position} onChange={(e) => upd(i, 'position', e.target.value)} />
                 <input className="field sm:col-span-2" type="date" min={week} max={addDaysISO(week, 6)} value={a.date} onChange={(e) => upd(i, 'date', e.target.value)} />
@@ -104,11 +104,15 @@ export default function Checkin() {
               </div>
             ))}
           </div>
-          <label className="mt-4 block text-sm">
-            Earnings from part-time work this week ($)
-            <input className="field mt-1 max-w-48" inputMode="decimal" value={earnings} onChange={(e) => setEarnings(e.target.value)} />
+          <label className="mt-6 block border-t border-ink/[.06] pt-5">
+            <span className="text-sm font-medium">Part-time earnings this week</span>
+            <span className="block text-[13px] text-ink-soft">Gross amount, $0 if none. You must report it when you certify.</span>
+            <div className="relative mt-2 max-w-56">
+              <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-soft">$</span>
+              <input className="field num pl-7" inputMode="decimal" value={earnings} onChange={(e) => setEarnings(e.target.value.replace(/[^\d.]/g, ''))} />
+            </div>
           </label>
-          <button className="btn btn-primary mt-5" onClick={() => save.mutate()} disabled={save.isPending || acts.length === 0}>
+          <button className="btn btn-primary mt-6 w-full sm:w-auto" onClick={() => save.mutate()} disabled={save.isPending || acts.length === 0}>
             {save.isPending ? 'Checking…' : 'Check & build my record'}
           </button>
           {save.error && <div className="mt-3"><ErrorBox error={save.error} /></div>}
@@ -122,7 +126,7 @@ export default function Checkin() {
                 <span className="text-sm text-ink-soft">certify by {fmtDate(result.nextCertificationDate)}</span>
               </div>
               {result.issues.length > 0 && <ul className="mt-3 space-y-1 text-sm text-wine">{result.issues.map((x) => <li key={x}>• {x}</li>)}</ul>}
-              {result.earningsReminder && <p className="mt-3 rounded-xl bg-sky/40 p-3 text-sm">{result.earningsReminder}</p>}
+              {result.earningsReminder && <p className="mt-3 rounded-xl bg-brand-soft p-3 text-sm">{result.earningsReminder}</p>}
               <pre className="num mt-3 max-h-56 overflow-auto whitespace-pre-wrap rounded-xl bg-ink p-3 text-xs text-cream">{result.record}</pre>
               <div className="mt-3 flex flex-wrap gap-2">
                 <button className="btn btn-ghost btn-sm" onClick={() => { navigator.clipboard.writeText(result.record); setCopied(true) }}><Copy className="size-4" /> {copied ? 'Copied' : 'Copy for portal'}</button>
@@ -131,7 +135,7 @@ export default function Checkin() {
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-ink/30 p-5 text-sm text-ink-soft">Your ready-to-paste record for the state portal appears here.</div>
+            <div className="rounded-2xl border border-ink/[.08] bg-white/50 p-5 text-sm text-ink-soft">Your ready-to-paste record for the state portal appears here.</div>
           )}
           <div className="retro-card-soft p-5">
             <div className="mono-label text-ink-soft">Runway now</div>

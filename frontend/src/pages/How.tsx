@@ -29,7 +29,7 @@ export default function How() {
             <thead className="mono-label text-left text-ink-soft"><tr><th className="p-3">Dataset</th><th>As of</th><th>Status</th><th>Source</th></tr></thead>
             <tbody>
               {q.data.sources.map((s) => (
-                <tr key={s.dataset} className="border-t border-dashed border-line">
+                <tr key={s.dataset} className="border-t border-ink/[.06]">
                   <td className="p-3">{s.dataset}</td>
                   <td className="num">{s.asOf}</td>
                   <td>{s.estimate ? <Tag tone="muted">estimate</Tag> : <Tag tone="ok">official</Tag>}</td>

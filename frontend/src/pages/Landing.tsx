@@ -1,38 +1,54 @@
 import { useMutation } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { ArrowRight, CalendarCheck, HeartPulse, LineChart, Receipt } from 'lucide-react'
+import { ArrowUpRight, CalendarCheck, HeartPulse, LineChart, Receipt } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { post } from '../api/client'
 import { ErrorBox } from '../components/ui'
 
-function Sun() {
-  return (
-    <svg viewBox="0 0 200 100" className="w-full" aria-hidden>
-      <defs>
-        <linearGradient id="sunfill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#2F80EC" />
-          <stop offset="1" stopColor="#9CC7FF" />
-        </linearGradient>
-        <clipPath id="half">
-          <rect x="0" y="0" width="200" height="100" />
-        </clipPath>
-      </defs>
-      <g clipPath="url(#half)">
-        <circle cx="100" cy="100" r="96" fill="url(#sunfill)" />
-        {[54, 66, 76, 85, 93].map((y, i) => (
-          <rect key={y} x="0" y={y} width="200" height={2 + i * 1.2} fill="#FCF3EE" />
-        ))}
-      </g>
-    </svg>
-  )
-}
+const ease = [0.22, 1, 0.36, 1] as const
 
 const steps = [
-  { icon: HeartPulse, k: 'Day 0', t: 'Insurance decoded', d: 'COBRA vs Marketplace vs your spouse’s plan, priced on your new annual income.' },
-  { icon: CalendarCheck, k: 'Every week', t: 'Never miss a benefit check', d: 'Log job-search activities in 10 seconds and get a ready-to-paste record for your state.' },
-  { icon: LineChart, k: 'The offer', t: 'Exit without a surprise', d: 'Compare offers net of benefits, bridge coverage gaps, avoid the subsidy clawback.' },
-  { icon: Receipt, k: 'Tax day', t: 'Know before April', d: 'Tax on unemployment and severance, plus the full ACA reconciliation preview.' },
+  { icon: HeartPulse, k: 'Day 0', t: 'Health insurance, decoded', d: 'COBRA, the Marketplace and your spouse’s plan, priced on the income you will actually have this year.' },
+  { icon: CalendarCheck, k: 'Every week', t: 'Never miss a benefit check', d: 'Log job-search activities in seconds and get a record formatted for your state portal.' },
+  { icon: LineChart, k: 'The offer', t: 'Leave without a surprise', d: 'Compare offers after benefits, bridge the coverage gap and catch a subsidy clawback early.' },
+  { icon: Receipt, k: 'Tax day', t: 'Know before April', d: 'Tax on unemployment and severance plus the Marketplace reconciliation, ahead of filing.' },
 ]
+
+const facts = [
+  ['$2,406', 'per month', 'Average family COBRA premium in 2026 (KFF, ×102%)'],
+  ['400%', 'of poverty line', 'Above it, Marketplace subsidies stop entirely since 2026'],
+  ['$0', 'repayment cap', 'Excess subsidy is repaid in full from tax year 2026 (IRS)'],
+]
+
+function Preview() {
+  return (
+    <div className="retro-card mx-auto w-full max-w-3xl p-2 text-left">
+      <div className="rounded-[18px] border border-ink/[.06] bg-cream/60 p-5 sm:p-7">
+        <div className="flex items-center justify-between text-[13px] text-ink-soft">
+          <span>Jessica · Austin, TX · family of 3</span>
+          <span className="rounded-full bg-brand-soft px-2.5 py-1 text-[12px] font-medium text-brand-deep">Sample</span>
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-[13px] text-ink-soft">Insurance / month</div>
+            <div className="num mt-2 text-3xl font-semibold text-brand">$734</div>
+            <div className="num text-[13px] text-ink-soft line-through">COBRA $2,406</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-[13px] text-ink-soft">Money lasts</div>
+            <div className="num mt-2 text-3xl font-semibold">8.3 mo</div>
+            <div className="text-[13px] text-ink-soft">with Marketplace</div>
+          </div>
+          <div className="rounded-2xl bg-white p-4">
+            <div className="text-[13px] text-ink-soft">Next deadline</div>
+            <div className="mt-2 text-lg font-semibold leading-tight">File for unemployment</div>
+            <div className="text-[13px] text-ink-soft">this week</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Landing() {
   const nav = useNavigate()
@@ -42,101 +58,97 @@ export default function Landing() {
   })
   return (
     <>
-      <section className="relative overflow-hidden border-b border-line">
-        <div className="horizon" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pb-20 pt-12 md:grid-cols-[1.15fr_.85fr] md:pt-20">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}>
-            <div className="mono-label inline-flex items-center gap-2 rounded-full border border-ink bg-white px-3 py-1.5">
-              <span className="size-2 rounded-full bg-brand" /> For US workers who just got laid off
+      <section className="glow relative">
+        <div className="mx-auto max-w-6xl px-4 pb-16 pt-14 text-center sm:pt-24">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+            <div className="inline-flex items-center gap-2 rounded-full border border-ink/[.08] bg-white/80 px-3 py-1.5 text-[13px] text-ink-soft">
+              <span className="size-1.5 rounded-full bg-brand" /> For US workers who were just laid off
             </div>
-            <h1 className="mt-6 text-[2.6rem] font-bold leading-[1.02] sm:text-6xl">
-              Got laid off?
+            <h1 className="mx-auto mt-6 max-w-4xl text-[44px] font-semibold leading-[1.02] sm:text-[76px]">
+              Lose your job,
               <br />
-              <span className="text-brand">Your next 60 days,</span>
-              <br />
-              decoded.
+              <span className="text-gradient">not your money.</span>
             </h1>
-            <p className="mt-5 max-w-lg text-lg text-ink-soft">
-              You’ll find the next job. We make sure you don’t lose money while you look: health insurance, unemployment, severance, the offer, and taxes.
+            <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft sm:text-lg">
+              You’ll find the next job. We handle the money side of the months in between: health insurance, unemployment, severance, the offer and taxes.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/start" className="btn btn-primary">
-                Start — 2 minutes <ArrowRight className="size-4" />
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link to="/start" className="btn btn-primary w-full sm:w-auto">
+                Start my plan <ArrowUpRight className="size-4" />
               </Link>
-              <button className="btn btn-sky" onClick={() => sample.mutate()} disabled={sample.isPending}>
-                {sample.isPending ? 'Loading sample…' : 'Try sample case: Jessica, 38, Austin'}
+              <button className="btn btn-sky w-full sm:w-auto" onClick={() => sample.mutate()} disabled={sample.isPending}>
+                {sample.isPending ? 'Opening sample…' : 'See a sample case'}
               </button>
             </div>
-            {sample.error && <div className="mt-4 max-w-md"><ErrorBox error={sample.error} onRetry={() => sample.mutate()} /></div>}
-            <p className="mono-label mt-5 text-ink-soft">No login · No bank connection · No SSN</p>
+            {sample.error && <div className="mx-auto mt-4 max-w-md text-left"><ErrorBox error={sample.error} onRetry={() => sample.mutate()} /></div>}
+            <p className="mt-4 text-[13px] text-ink-soft">Takes 2 minutes · No login · No bank connection · No SSN</p>
           </motion.div>
-
-          <motion.div
-            className="retro-card scan relative self-center overflow-hidden p-6"
-            initial={{ opacity: 0, y: 16, rotate: -1 }}
-            animate={{ opacity: 1, y: 0, rotate: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.2, 0.8, 0.2, 1] }}
-          >
-            <div className="mono-label flex items-center justify-between text-ink-soft">
-              <span>Sedona readout</span>
-              <span className="text-brand">● live math</span>
-            </div>
-            <div className="mx-auto mt-4 w-48"><Sun /></div>
-            <dl className="mt-4 space-y-3">
-              {[
-                ['COBRA for a family', '$2,406/mo', 'KFF 2026 avg × 102%'],
-                ['Subsidy cliff', '400% FPL', 'Returned in 2026'],
-                ['Subsidy repayment cap', 'None', 'From tax year 2026'],
-              ].map(([k, v, s]) => (
-                <div key={k} className="flex items-baseline justify-between gap-3 border-b border-dashed border-line pb-2">
-                  <dt className="text-sm text-ink-soft">
-                    {k}
-                    <div className="mono-label !text-[9px]">{s}</div>
-                  </dt>
-                  <dd className="num text-xl font-bold">{v}</dd>
-                </div>
-              ))}
-            </dl>
+          <motion.div className="mt-14" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease }}>
+            <Preview />
           </motion.div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="mono-label text-brand">One event, start to finish</div>
-        <h2 className="mt-1 max-w-2xl text-3xl font-semibold">6–8 money decisions in 60 days. In panic. With no one on your side.</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-px overflow-hidden rounded-3xl border border-ink/[.07] bg-ink/[.07] sm:grid-cols-3">
+          {facts.map(([v, u, s]) => (
+            <div key={s} className="bg-cream p-6">
+              <div className="num text-4xl font-semibold text-brand">{v}</div>
+              <div className="text-sm font-medium">{u}</div>
+              <p className="mt-2 text-sm text-ink-soft">{s}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-10">
+        <div className="max-w-2xl">
+          <h2 className="text-4xl font-semibold leading-tight sm:text-5xl">
+            One event, start to finish.
+            <br />
+            <span className="text-ink-soft">Six to eight money decisions in 60 days.</span>
+          </h2>
+        </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <motion.div
               key={s.t}
-              className="retro-card-soft p-5"
-              initial={{ opacity: 0, y: 10 }}
+              className="retro-card-soft p-6"
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.06 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.45, delay: i * 0.06, ease }}
             >
-              <div className="flex items-center justify-between">
-                <span className="grid size-10 place-items-center rounded-full border border-ink bg-sky">
-                  <s.icon className="size-5" />
-                </span>
-                <span className="mono-label text-ink-soft">{String(i + 1).padStart(2, '0')} · {s.k}</span>
+              <div className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-deep">
+                <s.icon className="size-5" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold">{s.t}</h3>
-              <p className="mt-1 text-sm text-ink-soft">{s.d}</p>
+              <div className="mt-5 text-[13px] text-ink-soft">{s.k}</div>
+              <h3 className="mt-1 text-lg font-semibold">{s.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{s.d}</p>
             </motion.div>
           ))}
         </div>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-10">
+        <div className="grid gap-4 md:grid-cols-3">
           {[
-            ['We calculate, we don’t advise', 'Every number shows its formula, source and date. You decide.'],
-            ['We don’t sell insurance', 'No broker commissions. We link to healthcare.gov and your state portal.'],
-            ['Only numbers, no bank login', 'No SSN, no account numbers. Your answers stay in this browser session.'],
+            ['We calculate, you decide', 'Every number shows its formula, source and date. We never tell you which plan to pick.'],
+            ['No commissions', 'We don’t sell insurance. You pay us, so we work for you.'],
+            ['Only numbers', 'No SSN, no account numbers, no bank login. Just dates and amounts.'],
           ].map(([t, d]) => (
-            <div key={t} className="rounded-2xl border border-dashed border-ink/30 p-5">
-              <div className="stripes mb-3 h-2 w-12 rounded-full" />
+            <div key={t} className="border-t border-ink/10 pt-5">
               <h4 className="font-semibold">{t}</h4>
-              <p className="mt-1 text-sm text-ink-soft">{d}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{d}</p>
             </div>
           ))}
+        </div>
+        <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl bg-ink p-8 text-white sm:flex-row sm:items-center sm:p-10">
+          <div>
+            <h3 className="text-3xl font-semibold">Your next 60 days, decoded.</h3>
+            <p className="mt-2 text-white/60">Answer 8 short questions. See your numbers right away.</p>
+          </div>
+          <Link to="/start" className="btn btn-primary">Start my plan <ArrowUpRight className="size-4" /></Link>
         </div>
       </section>
     </>

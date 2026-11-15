@@ -119,12 +119,12 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm transition-colors ${checked ? 'border-ink bg-sky/50' : 'border-line bg-white'}`}
+      className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm transition-colors ${checked ? 'border-ink bg-brand-soft' : 'border-ink/10 bg-white'}`}
       aria-pressed={checked}
     >
       {label}
-      <span className={`relative h-6 w-11 rounded-full border border-ink transition-colors ${checked ? 'bg-brand' : 'bg-cream-deep'}`}>
-        <span className={`absolute top-0.5 size-4.5 rounded-full border border-ink bg-white transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
+      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? 'bg-brand' : 'bg-ink/15'}`}>
+        <span className={`absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
       </span>
     </button>
   )
@@ -181,7 +181,7 @@ export default function Quiz() {
       </Field>
       {states.error && <ErrorBox error={states.error} onRetry={() => states.refetch()} />}
       {unsupported && (
-        <div className="rounded-2xl border border-wine/40 bg-wine/5 p-4 text-sm">
+        <div className="rounded-2xl bg-brand-soft p-4 text-sm">
           <b>{selected.name} is coming soon.</b> We only show numbers we can source, so we support Missouri, Texas, Michigan, California and Florida
           today. Try the sample case to see how it works.
         </div>
@@ -237,7 +237,7 @@ export default function Quiz() {
         ['Savings / expenses', `$${v.savings} / $${v.monthlyExpenses} per month`],
         ['Job search', `${v.weeks} weeks`],
       ].map(([k, val]) => (
-        <div key={k} className="flex justify-between gap-4 border-b border-dashed border-line py-2">
+        <div key={k} className="flex justify-between gap-4 border-b border-ink/[.06] py-2">
           <dt className="text-ink-soft">{k}</dt>
           <dd className="num text-right font-medium">{val}</dd>
         </div>
