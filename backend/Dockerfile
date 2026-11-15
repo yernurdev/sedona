@@ -3,12 +3,13 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o /out/api ./cmd/api
+RUN CGO_ENABLED=0 go build -trimpath -ldflags "-s -w" -o /out/api ./cmd/api && mkdir -p /out/data
 
 FROM gcr.io/distroless/static-debian12
 WORKDIR /app
 COPY --from=build /out/api /app/api
 COPY data /app/data
+COPY --from=build --chown=65532:65532 /out/data /data
 ENV DATA_DIR=/app/data DB_PATH=/data/sedona.db PORT=8080
 EXPOSE 8080
 USER nonroot
