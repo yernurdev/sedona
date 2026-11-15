@@ -1,0 +1,19 @@
+# The API joins the host's existing Caddy through the external "shared-edge" network.
+# For a dedicated VM, add a caddy service with deploy/Caddyfile instead.
+services:
+  api:
+    build: ../backend
+    container_name: sedona-api
+    restart: unless-stopped
+    env_file: ../.env
+    volumes:
+      - sedona_data:/data
+    networks:
+      - shared-edge
+
+volumes:
+  sedona_data:
+
+networks:
+  shared-edge:
+    external: true

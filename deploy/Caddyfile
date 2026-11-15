@@ -1,0 +1,5 @@
+# Site block for the API (add to the host Caddyfile, then `caddy reload`).
+{$SEDONA_API_HOST:94-131-95-178.sslip.io} {
+	encode gzip zstd
+	reverse_proxy sedona-api:8080
+}
