@@ -68,6 +68,7 @@ func (s *Server) Handler() http.Handler {
 
 	m.HandleFunc("GET /api/billing/plans", s.billingPlans)
 	m.HandleFunc("POST /api/billing/checkout", s.auth(s.checkout))
+	m.HandleFunc("POST /api/billing/test-checkout", s.auth(s.testCheckout))
 	m.HandleFunc("POST /api/billing/webhook", s.webhook)
 	m.HandleFunc("GET /api/billing/status/{id}", s.auth(s.withCase(s.billingStatus)))
 

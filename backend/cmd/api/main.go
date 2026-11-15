@@ -62,7 +62,7 @@ func run(log *slog.Logger) error {
 			SecretKey: os.Getenv("STRIPE_SECRET_KEY"), WebhookSecret: os.Getenv("STRIPE_WEBHOOK_SECRET"),
 			PriceMonthly: os.Getenv("STRIPE_PRICE_MONTHLY"), PriceSetup: os.Getenv("STRIPE_PRICE_SETUP"), FrontendURL: frontend,
 		}),
-		LLM:         llm.New(env("LLM_PROVIDER", "anthropic"), os.Getenv("LLM_API_KEY"), os.Getenv("LLM_MODEL")),
+		LLM:         llm.New(env("LLM_PROVIDER", "anthropic"), os.Getenv("LLM_API_KEY"), os.Getenv("LLM_MODEL"), os.Getenv("LLM_BASE_URL")),
 		Origins:     origins,
 		FrontendURL: frontend,
 		Version:     version,

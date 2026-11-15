@@ -17,24 +17,49 @@ Do not give legal, tax, medical, insurance or investment advice and do not tell 
 Describe what the numbers mean and what to verify with official sources. No markdown headings.`
 
 type Client struct {
-	api   *anthropic.Client
-	model string
+	api    *anthropic.Client
+	compat *openAICompat
+	model  string
 }
 
-func New(provider, apiKey, model string) *Client {
-	if apiKey == "" || (provider != "" && provider != "anthropic") {
+var compatDefaults = map[string][2]string{
+	"gemini": {"https://generativelanguage.googleapis.com/v1beta/openai", "gemini-2.5-flash"},
+	"groq":   {"https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"},
+	"openai": {"https://api.openai.com/v1", "gpt-4o-mini"},
+}
+
+// New picks the provider: "anthropic" uses the official SDK; "gemini", "groq",
+// "openai" or any baseURL use an OpenAI-compatible chat completions endpoint.
+func New(provider, apiKey, model, baseURL string) *Client {
+	if apiKey == "" {
 		return &Client{}
 	}
-	if model == "" {
-		model = "claude-opus-5-5"
+	if provider == "" || provider == "anthropic" {
+		if model == "" {
+			model = "claude-opus-5-5"
+		}
+		c := anthropic.NewClient(option.WithAPIKey(apiKey))
+		return &Client{api: &c, model: model}
 	}
-	c := anthropic.NewClient(option.WithAPIKey(apiKey))
-	return &Client{api: &c, model: model}
+	d := compatDefaults[provider]
+	if baseURL == "" {
+		baseURL = d[0]
+	}
+	if model == "" {
+		model = d[1]
+	}
+	if baseURL == "" || model == "" {
+		return &Client{}
+	}
+	return &Client{compat: newOpenAICompat(baseURL, apiKey, model), model: model}
 }
 
-func (c *Client) Enabled() bool { return c.api != nil }
+func (c *Client) Enabled() bool { return c.api != nil || c.compat != nil }
 
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
+	if c.compat != nil {
+		return c.compat.complete(ctx, prompt)
+	}
 	if c.api == nil {
 		return "", ErrNotConfigured
 	}

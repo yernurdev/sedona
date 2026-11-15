@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/yernurdev/sedona/backend/internal/calc"
 	"github.com/yernurdev/sedona/backend/internal/ics"
@@ -452,4 +453,54 @@ func fmtMoney(n int64) string {
 		b.WriteRune(r)
 	}
 	return "$" + b.String()
+}
+
+// testCheckout is the built-in test-mode checkout used when no Stripe account is
+// configured: it accepts only the public test card and never charges anything.
+func (s *Server) testCheckout(w http.ResponseWriter, r *http.Request) {
+	if s.Billing.Enabled() {
+		writeErr(w, http.StatusConflict, "use_stripe", "This server uses Stripe Checkout.")
+		return
+	}
+	var body struct {
+		CaseID string `json:"caseId"`
+		Card   string `json:"card"`
+		Expiry string `json:"expiry"`
+		CVC    string `json:"cvc"`
+	}
+	if err := decode(r, &body); err != nil {
+		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
+		return
+	}
+	c, err := s.Store.GetCase(r.Context(), body.CaseID)
+	if err != nil || c.SessionID != sessionFrom(r).ID {
+		writeErr(w, http.StatusNotFound, "not_found", "Case not found.")
+		return
+	}
+	card := strings.NewReplacer(" ", "", "-", "").Replace(body.Card)
+	if card != "4242424242424242" {
+		writeErr(w, http.StatusPaymentRequired, "card_declined", "Test mode: only the test card 4242 4242 4242 4242 is accepted. No real cards.")
+		return
+	}
+	if !validExpiry(body.Expiry) || len(strings.TrimSpace(body.CVC)) < 3 {
+		writeErr(w, http.StatusBadRequest, "invalid_card", "Enter any future expiry (MM/YY) and any 3-digit CVC.")
+		return
+	}
+	if err := s.Store.CreatePayment(r.Context(), c.ID, "test_"+c.ID+"_"+fmt.Sprint(time.Now().Unix())); err != nil {
+		s.internal(w, r, err)
+		return
+	}
+	if err := s.Store.SetPaid(r.Context(), c.ID, true); err != nil {
+		s.internal(w, r, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"paid": true, "charged": 39, "currency": "usd", "testMode": true})
+}
+
+func validExpiry(s string) bool {
+	t, err := time.Parse("01/06", strings.ReplaceAll(strings.TrimSpace(s), " ", ""))
+	if err != nil {
+		return false
+	}
+	return !t.AddDate(0, 1, 0).Before(time.Now())
 }
