@@ -106,7 +106,7 @@ func (e *Engine) Offer(in *CaseInput, d *Dates, o OfferInput) (OfferResult, erro
 	gap.WithinCobraWindow = !newCov.After(election)
 	switch o.CurrentCoverage.Type {
 	case "aca":
-		gap.BridgeAdvice = "Based on these dates, a Marketplace plan kept through " + fmtDate(addDays(firstOfMonth(newCov), -1)) + " would leave no gap. Ending it requires a cancellation at healthcare.gov."
+		gap.BridgeAdvice = "Based on these dates, a Marketplace plan kept through " + fmtDate(addDays(firstOfMonth(addDays(newCov, -1)).AddDate(0, 1, 0), -1)) + " would leave no gap. Ending it requires a cancellation at healthcare.gov."
 	case "spouse":
 		gap.BridgeAdvice = "Coverage through your spouse's plan continues; no gap based on these dates."
 	default:
