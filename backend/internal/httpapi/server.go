@@ -32,7 +32,7 @@ type Server struct {
 }
 
 func (s *Server) Handler() http.Handler {
-	s.limiter = newIPLimiter(120, time.Minute)
+	s.limiter = newIPLimiter(600, time.Minute)
 	m := http.NewServeMux()
 	m.HandleFunc("GET /api/health", s.health)
 	m.HandleFunc("GET /api/meta/states", s.metaStates)
