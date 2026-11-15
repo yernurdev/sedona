@@ -1,0 +1,6 @@
+{ "code": "MI", "name": "Michigan", "supported": true, "source": "https://www.michigan.gov/leo/bureaus-agencies/uia", "workSearchSource": "https://www.michigan.gov/UIALawChanges", "asOf": "2026-11-15",
+  "benefit": { "highQuarterFraction": 0.041, "minWeekly": 150, "maxWeekly": 614, "maxWeeks": 26, "waitingWeek": false, "estimate": true },
+  "workSearch": { "perWeek": 3, "rule": "At least 3 unique work search activities per week (required since July 19, 2026).", "unique": true },
+  "certification": { "everyDays": 14, "weekday": "Sunday", "label": "Certify every two weeks" },
+  "portalUrl": "https://miwam.unemployment.state.mi.us", "medicaidExpansion": true, "severanceStateTaxPct": 4.25,
+  "howToFile": ["File online through MiWAM.", "Register with Pure Michigan Talent Connect.", "Certify every two weeks and report 3 unique work search activities for each week."] }

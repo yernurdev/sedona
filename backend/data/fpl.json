@@ -1,0 +1,10 @@
+{
+  "dataset": "Federal Poverty Guidelines (48 contiguous states and DC)",
+  "source": "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines",
+  "asOf": "2026-01-15",
+  "note": "Marketplace subsidies for coverage year N use the guidelines published for year N-1.",
+  "years": {
+    "2025": { "base": 15650, "perAdditional": 5500, "estimate": false },
+    "2026": { "base": 15960, "perAdditional": 5680, "estimate": true }
+  }
+}

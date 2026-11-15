@@ -1,0 +1,10 @@
+{
+  "dataset": "Average benchmark (second-lowest-cost silver) monthly premium for a 40-year-old, by state",
+  "source": "https://www.kff.org/affordable-care-act/state-indicator/average-marketplace-premiums-by-metal-tier/",
+  "asOf": "2026-01-01",
+  "note": "State averages, not ZIP-level quotes. Get an exact quote at healthcare.gov.",
+  "years": {
+    "2026": { "estimate": true, "states": { "TX": 590, "FL": 650, "CA": 545, "MI": 480, "MO": 660 } },
+    "2027": { "estimate": true, "note": "2027 state averages not yet loaded; 2026 values reused.", "states": { "TX": 590, "FL": 650, "CA": 545, "MI": 480, "MO": 660 } }
+  }
+}

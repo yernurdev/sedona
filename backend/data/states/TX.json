@@ -1,0 +1,6 @@
+{ "code": "TX", "name": "Texas", "supported": true, "source": "https://www.twc.texas.gov/jobseekers/eligibility-benefit-amounts", "workSearchSource": "https://www.law.cornell.edu/regulations/texas/40-Tex-Admin-Code-SS-815-28", "asOf": "2026-11-15",
+  "benefit": { "highQuarterFraction": 0.04, "minWeekly": 78, "maxWeekly": 577, "maxWeeks": 26, "waitingWeek": true, "estimate": true },
+  "workSearch": { "perWeek": 3, "rule": "At least 3 work search contacts per week (your local workforce board may set a different number).", "unique": false },
+  "certification": { "everyDays": 14, "weekday": "Sunday", "label": "Request payment every two weeks" },
+  "portalUrl": "https://ui.texasworkforce.org", "medicaidExpansion": false, "severanceStateTaxPct": 0,
+  "howToFile": ["Apply online at ui.texasworkforce.org or call the TWC Tele-Center.", "Have your last employer's name, address and your dates of work ready.", "Register in WorkInTexas.com within 3 business days unless exempt.", "Request payment every two weeks and log your work search contacts for each week."] }

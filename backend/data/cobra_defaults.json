@@ -1,0 +1,10 @@
+{
+  "dataset": "Average annual employer health premium (used when no COBRA letter amount is entered)",
+  "source": "https://www.kff.org/other-health/workers-now-pay-7471-on-average-annually-for-family-health-coverage-up-9-or-621-from-2025-benchmark-employer-health-benefits-survey-finds/",
+  "asOf": "2026-10-22",
+  "singleAnnual": 9804,
+  "familyAnnual": 28303,
+  "cobraMultiplier": 1.02,
+  "multiplierSource": "https://www.dol.gov/sites/dolgov/files/ebsa/about-ebsa/our-activities/resource-center/publications/an-employees-guide-to-health-benefits-under-cobra.pdf",
+  "estimate": true
+}

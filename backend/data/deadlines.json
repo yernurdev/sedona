@@ -1,0 +1,16 @@
+{
+  "dataset": "Deadline rules",
+  "asOf": "2026-11-15",
+  "rules": {
+    "cobra_election": { "days": 60, "title": "Elect COBRA (deadline)", "detail": "60 days from the later of losing coverage or receiving the COBRA notice. Coverage is retroactive, so you can wait and elect only if you need care.", "source": "https://www.dol.gov/general/topic/health-plans/cobra" },
+    "cobra_first_payment": { "days": 45, "title": "First COBRA premium due", "detail": "45 days after you elect COBRA. Coverage is retroactive to the day your old coverage ended.", "source": "https://www.dol.gov/general/topic/health-plans/cobra" },
+    "aca_sep": { "days": 60, "title": "Marketplace enrollment window closes", "detail": "Losing job-based coverage opens a 60-day Special Enrollment Period at healthcare.gov.", "source": "https://www.healthcare.gov/coverage-outside-open-enrollment/special-enrollment-period/" },
+    "spouse_sep": { "days": 30, "title": "Join your spouse's employer plan", "detail": "Employer plans must allow at least 30 days to enroll after you lose other coverage.", "source": "https://www.dol.gov/sites/dolgov/files/ebsa/about-ebsa/our-activities/resource-center/faqs/hipaa-consumer.pdf" },
+    "ui_file": { "days": 0, "title": "File your unemployment claim", "detail": "File in your first week out of work. Benefits generally start from the week you file, not the week you were laid off.", "source": "https://www.dol.gov/general/topic/unemployment-insurance" },
+    "severance_sign": { "days": 0, "title": "Severance agreement decision", "detail": "Date from your HR packet. If you are 40+, federal law (OWBPA) gives you at least 21 days (45 in a group layoff) to consider and 7 days to revoke after signing.", "source": "https://www.eeoc.gov/laws/guidance/understanding-waivers-discrimination-claims-employee-severance-agreements" },
+    "owbpa_group": { "days": 45, "title": "Severance review period (age 40+, group layoff)", "detail": "In a group layoff, workers 40+ get at least 45 days to consider a release, plus 7 days to revoke.", "source": "https://www.eeoc.gov/laws/guidance/understanding-waivers-discrimination-claims-employee-severance-agreements" },
+    "loan_401k": { "title": "Repay your 401(k) loan to avoid tax", "detail": "An unpaid loan offset can be rolled over until your tax filing deadline, including extensions, for the year of the offset.", "source": "https://www.irs.gov/retirement-plans/retirement-plans-faqs-regarding-loans" },
+    "fsa_spend": { "title": "Use your Health FSA balance", "detail": "Health FSA coverage usually ends with your employment or at the end of that month. Check your plan's end date and claims run-out period.", "source": "https://www.healthcare.gov/have-job-based-coverage/flexible-spending-accounts/" },
+    "aca_report_income": { "days": 30, "title": "Report your new income to the Marketplace", "detail": "Report income changes within 30 days. Since tax year 2026, excess advance subsidy must be repaid in full.", "source": "https://www.irs.gov/tax-professionals/eitc-central/repayment-caps-eliminated-for-excess-advance-payments-of-the-premium-tax-credit" }
+  }
+}

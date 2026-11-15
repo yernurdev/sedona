@@ -1,0 +1,31 @@
+{
+  "dataset": "Applicable percentage table (share of income expected for the benchmark plan)",
+  "source": "https://www.irs.gov/pub/irs-drop/rp-25-25.pdf",
+  "asOf": "2025-07-01",
+  "note": "Enhanced ARPA/IRA subsidies expired after 2025; no subsidy above 400% FPL.",
+  "years": {
+    "2026": {
+      "estimate": false,
+      "bands": [
+        { "fromPct": 0, "toPct": 133, "initial": 2.10, "final": 2.10 },
+        { "fromPct": 133, "toPct": 150, "initial": 3.14, "final": 4.19 },
+        { "fromPct": 150, "toPct": 200, "initial": 4.19, "final": 6.60 },
+        { "fromPct": 200, "toPct": 250, "initial": 6.60, "final": 8.44 },
+        { "fromPct": 250, "toPct": 300, "initial": 8.44, "final": 9.96 },
+        { "fromPct": 300, "toPct": 400, "initial": 9.96, "final": 9.96 }
+      ]
+    },
+    "2027": {
+      "estimate": true,
+      "note": "2027 table assumed equal to 2026 until the IRS revenue procedure is loaded.",
+      "bands": [
+        { "fromPct": 0, "toPct": 133, "initial": 2.10, "final": 2.10 },
+        { "fromPct": 133, "toPct": 150, "initial": 3.14, "final": 4.19 },
+        { "fromPct": 150, "toPct": 200, "initial": 4.19, "final": 6.60 },
+        { "fromPct": 200, "toPct": 250, "initial": 6.60, "final": 8.44 },
+        { "fromPct": 250, "toPct": 300, "initial": 8.44, "final": 9.96 },
+        { "fromPct": 300, "toPct": 400, "initial": 9.96, "final": 9.96 }
+      ]
+    }
+  }
+}

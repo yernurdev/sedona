@@ -1,0 +1,12 @@
+{
+  "dataset": "Federal income tax brackets and standard deduction, tax year 2026",
+  "source": "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
+  "asOf": "2025-10-09",
+  "supplementalWithholdingPct": 22,
+  "ficaPct": 7.65,
+  "uiVoluntaryWithholdingPct": 10,
+  "filing": {
+    "single": { "standardDeduction": 16100, "brackets": [ [12400, 10], [50400, 12], [105700, 22], [201775, 24], [256225, 32], [640600, 35], [0, 37] ] },
+    "married": { "standardDeduction": 32200, "brackets": [ [24800, 10], [100800, 12], [211400, 22], [403550, 24], [512450, 32], [768700, 35], [0, 37] ] }
+  }
+}

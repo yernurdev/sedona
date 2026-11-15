@@ -1,0 +1,11 @@
+.env
+*.env.local
+*.db
+*.db-*
+node_modules/
+dist/
+.vercel/
+.DS_Store
+CLAUDE.md
+.claude/
+AGENTS.md

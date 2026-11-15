@@ -1,0 +1,6 @@
+{ "code": "FL", "name": "Florida", "supported": true, "source": "https://floridajobs.org/job-seekers-community-services/reemployment-assistance-center", "workSearchSource": "https://floridajobs.org/job-seekers-community-services/reemployment-assistance-center/claimants/work-search", "asOf": "2026-11-15",
+  "benefit": { "highQuarterFraction": 0.03846, "minWeekly": 32, "maxWeekly": 275, "maxWeeks": 12, "waitingWeek": true, "estimate": true },
+  "workSearch": { "perWeek": 5, "rule": "At least 5 work search contacts per week.", "unique": false },
+  "certification": { "everyDays": 14, "weekday": "Sunday", "label": "Request benefits every two weeks" },
+  "portalUrl": "https://floridajobs.org/reconnect", "medicaidExpansion": false, "severanceStateTaxPct": 0,
+  "howToFile": ["Apply through Reconnect at floridajobs.org.", "Register in Employ Florida.", "Request benefits every two weeks and report 5 work search contacts per week."] }

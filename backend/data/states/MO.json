@@ -1,0 +1,6 @@
+{ "code": "MO", "name": "Missouri", "supported": true, "source": "https://labor.mo.gov/unemployment", "workSearchSource": "https://labor.mo.gov/faqs/knowledge-base/do-i-need-search-work", "asOf": "2026-11-15",
+  "benefit": { "highQuarterFraction": 0.04, "minWeekly": 35, "maxWeekly": 320, "maxWeeks": 20, "waitingWeek": true, "estimate": true },
+  "workSearch": { "perWeek": 3, "rule": "At least 3 work search activities each week.", "unique": false },
+  "certification": { "everyDays": 7, "weekday": "Sunday", "label": "Request payment every week" },
+  "portalUrl": "https://uinteract.labor.mo.gov", "medicaidExpansion": true, "severanceStateTaxPct": 4.7,
+  "howToFile": ["File online at uinteract.labor.mo.gov.", "Register with jobs.mo.gov.", "Request payment weekly and report 3 work search activities each week."] }

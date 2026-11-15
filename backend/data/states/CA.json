@@ -1,0 +1,6 @@
+{ "code": "CA", "name": "California", "supported": true, "source": "https://edd.ca.gov/en/unemployment/", "workSearchSource": "https://edd.ca.gov/en/unemployment/eligibility/", "asOf": "2026-11-15",
+  "benefit": { "highQuarterFraction": 0.03846, "minWeekly": 40, "maxWeekly": 450, "maxWeeks": 26, "waitingWeek": true, "estimate": true },
+  "workSearch": { "perWeek": 0, "rule": "No fixed weekly number: you must actively look for work each week and keep a record of your search.", "unique": false },
+  "certification": { "everyDays": 14, "weekday": "Sunday", "label": "Certify every two weeks" },
+  "portalUrl": "https://edd.ca.gov/en/unemployment/", "medicaidExpansion": true, "severanceStateTaxPct": 6.6,
+  "howToFile": ["Apply through myEDD at edd.ca.gov.", "Register on CalJOBS.", "Certify every two weeks and keep a record of your job search."] }
