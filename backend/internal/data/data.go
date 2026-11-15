@@ -208,19 +208,44 @@ func (t *Tables) validate() error {
 	return nil
 }
 
-func (t *Tables) FPLFor(year, household int) (int64, bool, error) {
-	y, ok := t.FPL.Years[strconv.Itoa(year)]
-	if !ok {
-		return 0, false, fmt.Errorf("no poverty guidelines for %d", year)
+// nearestYear picks the requested year if loaded, otherwise the closest loaded year.
+// A fallback is always reported as an estimate.
+func nearestYear[T any](m map[string]T, year int) (T, bool, bool) {
+	if v, ok := m[strconv.Itoa(year)]; ok {
+		return v, false, true
 	}
-	return y.Base + int64(household-1)*y.PerAdditional, y.Estimate, nil
+	var best T
+	bestDist, found := 0, false
+	for k, v := range m {
+		y, err := strconv.Atoi(k)
+		if err != nil {
+			continue
+		}
+		d := y - year
+		if d < 0 {
+			d = -d
+		}
+		if !found || d < bestDist {
+			best, bestDist, found = v, d, true
+		}
+	}
+	return best, true, found
+}
+
+func (t *Tables) FPLFor(year, household int) (int64, bool, error) {
+	y, fallback, ok := nearestYear(t.FPL.Years, year)
+	if !ok {
+		return 0, false, fmt.Errorf("no poverty guidelines loaded")
+	}
+	return y.Base + int64(household-1)*y.PerAdditional, y.Estimate || fallback, nil
 }
 
 func (t *Tables) ApplicablePercent(year int, fplPct float64) (float64, bool, error) {
-	y, ok := t.Pct.Years[strconv.Itoa(year)]
+	y, fallback, ok := nearestYear(t.Pct.Years, year)
 	if !ok {
-		return 0, false, fmt.Errorf("no applicable percentage table for %d", year)
+		return 0, false, fmt.Errorf("no applicable percentage table loaded")
 	}
+	y.Estimate = y.Estimate || fallback
 	for _, b := range y.Bands {
 		if fplPct >= b.FromPct && fplPct < b.ToPct {
 			share := (fplPct - b.FromPct) / (b.ToPct - b.FromPct)
@@ -231,10 +256,11 @@ func (t *Tables) ApplicablePercent(year int, fplPct float64) (float64, bool, err
 }
 
 func (t *Tables) Benchmark40(year int, state string) (int64, bool, error) {
-	y, ok := t.Benchmarks.Years[strconv.Itoa(year)]
+	y, fallback, ok := nearestYear(t.Benchmarks.Years, year)
 	if !ok {
-		return 0, false, fmt.Errorf("no benchmark premiums for %d", year)
+		return 0, false, fmt.Errorf("no benchmark premiums loaded")
 	}
+	y.Estimate = y.Estimate || fallback
 	v, ok := y.States[state]
 	if !ok {
 		return 0, false, fmt.Errorf("no benchmark premium for %s", state)

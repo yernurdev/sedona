@@ -137,3 +137,16 @@ func TestOfferClawback(t *testing.T) {
 	}
 	t.Logf("clawback %+v", res.APTCClawback)
 }
+
+func TestCoverageIntoUnloadedYear(t *testing.T) {
+	e := engine(t)
+	in, _, today := jessica(t, e)
+	in.CoverageEndDate = "2027-09-30"
+	d, err := in.Validate(e.Supported)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := e.Build(Context{Input: in, Dates: d, Now: today, Start: today}); err != nil {
+		t.Fatalf("report should fall back to nearest table year: %v", err)
+	}
+}

@@ -103,6 +103,12 @@ func (in *CaseInput) Validate(supported func(string) bool) (*Dates, error) {
 	if d.CoverageEnd.Before(d.LastDay) {
 		return nil, errors.New("coverage cannot end before your last day")
 	}
+	if d.LastDay.Year() < 2025 || d.LastDay.After(Today().AddDate(1, 0, 0)) {
+		return nil, errors.New("last day of work must be between 2025 and one year from today")
+	}
+	if d.CoverageEnd.After(d.LastDay.AddDate(0, 18, 0)) {
+		return nil, errors.New("coverage end date must be within 18 months of your last day")
+	}
 	if in.CobraNoticeDate != nil && *in.CobraNoticeDate != "" {
 		t, err := ParseDate(*in.CobraNoticeDate)
 		if err != nil {
