@@ -35,7 +35,7 @@ function ResultCard({ r, onDelete }: { r: OfferResult; onDelete?: () => void }) 
         <p className="mt-1 text-sm text-ink-soft">{r.coverageGap.bridgeAdvice}</p>
       </div>
       {cb && (
-        <div className={`rounded-3xl border p-6 ${cb.excess > 0 ? 'border-wine/25 bg-wine/[.04]' : 'border-ok/25 bg-ok/[.05]'}`}>
+        <div className={`rounded-[16px] border p-6 ${cb.excess > 0 ? 'border-wine/25 bg-wine/[.04]' : 'border-ok/25 bg-ok/[.05]'}`}>
           <div className="flex items-center gap-2 font-semibold">
             {cb.excess > 0 ? <AlertTriangle className="size-5 text-wine" /> : <ShieldCheck className="size-5 text-ok" />}
             {cb.excess > 0 ? <>You could owe <span className="num text-wine">{usd(cb.excess)}</span> in April</> : 'No subsidy clawback expected'}
@@ -107,12 +107,12 @@ export default function Offer() {
             {n('coverageStartsAfterDays', 'Coverage starts after (days)')}
           </div>
           <label className="block text-sm">Start date<input type="date" className="field mt-1" value={f.startDate} onChange={(e) => set('startDate', e.target.value)} /></label>
-          <div className="rounded-2xl bg-cream p-3">
+          <div className="rounded-[12px] bg-cream p-3">
             <div className="mono-label text-ink-soft">Your coverage right now</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {(['aca', 'cobra', 'spouse', 'none'] as const).map((t) => (
                 <button type="button" key={t} onClick={() => set('currentCoverage', { ...f.currentCoverage, type: t })}
-                  className={`rounded-full border px-3 py-1 text-sm ${f.currentCoverage.type === t ? 'border-ink bg-ink text-white' : 'border-ink/10 bg-white'}`}>
+                  className={`rounded-[10px] border px-3 py-1 text-sm ${f.currentCoverage.type === t ? 'border-ink bg-ink text-white' : 'border-ink/10 bg-white'}`}>
                   {t === 'aca' ? 'Marketplace' : t === 'none' ? 'Uninsured' : t === 'cobra' ? 'COBRA' : 'Spouse plan'}
                 </button>
               ))}
@@ -134,7 +134,7 @@ export default function Offer() {
           {last ? (
             <>
               {last.compareTo && (
-                <div className="mb-4 rounded-2xl bg-brand-soft p-4 text-sm">
+                <div className="mb-4 rounded-[12px] bg-brand-soft p-4 text-sm">
                   vs <b>{last.compareTo.company || 'previous offer'}</b>: this one is worth <b className="num">{usd(Math.abs(last.compareTo.difference))}</b> {last.compareTo.difference >= 0 ? 'more' : 'less'} per year after benefits.
                 </div>
               )}
@@ -142,7 +142,7 @@ export default function Offer() {
               {last.result.aptcClawback && <Explain caseId={caseId} topic="clawback" />}
             </>
           ) : (
-            <div className="rounded-2xl border border-ink/[.08] bg-white/50 p-6 text-sm text-ink-soft">Enter an offer to see its real value, the coverage bridge and any subsidy clawback.</div>
+            <div className="rounded-[12px] border border-ink/[.08] bg-white/50 p-6 text-sm text-ink-soft">Enter an offer to see its real value, the coverage bridge and any subsidy clawback.</div>
           )}
         </div>
       </div>

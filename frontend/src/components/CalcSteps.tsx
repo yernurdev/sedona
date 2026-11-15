@@ -47,7 +47,7 @@ export default function CalcSteps({ s, onDone }: { s: Summary; onDone: () => voi
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16 sm:py-24">
-      <h1 className="text-3xl font-semibold">Running your numbers</h1>
+      <h1 className="text-3xl font-[460]">Running your numbers</h1>
       <p className="mt-2 text-ink-soft">Every figure is computed from your answers with published rules.</p>
       <ol className="retro-card mt-8 divide-y divide-ink/[.06] p-2">
         {steps.map(([t, v], i) => (

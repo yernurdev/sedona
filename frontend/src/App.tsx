@@ -36,7 +36,7 @@ export default function App() {
       <Route path="/offer/:caseId" element={wrap(<Offer />)} />
       <Route path="/tax/:caseId" element={wrap(<Tax />)} />
       <Route path="/how" element={wrap(<How />)} />
-      <Route path="*" element={wrap(<div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-bold">Page not found</h1><Link to="/" className="btn btn-primary mt-6">Home</Link></div>)} />
+      <Route path="*" element={wrap(<div className="mx-auto max-w-xl px-4 py-24 text-center"><h1 className="text-3xl font-[460]">Page not found</h1><Link to="/" className="btn btn-primary mt-6">Home</Link></div>)} />
     </Routes>
     </>
   )

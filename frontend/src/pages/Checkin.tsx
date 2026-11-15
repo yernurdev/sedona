@@ -91,7 +91,7 @@ export default function Checkin() {
           </button>
           <div className="mt-4 space-y-3">
             {acts.map((a, i) => (
-              <div key={i} className="grid gap-2 rounded-2xl border border-ink/[.07] bg-cream/50 p-3 sm:grid-cols-6">
+              <div key={i} className="grid gap-2 rounded-[12px] border border-ink/[.07] bg-cream/50 p-3 sm:grid-cols-6">
                 <input className="field sm:col-span-2" placeholder="Employer" value={a.employer} onChange={(e) => upd(i, 'employer', e.target.value)} />
                 <input className="field sm:col-span-2" placeholder="Position" value={a.position} onChange={(e) => upd(i, 'position', e.target.value)} />
                 <input className="field sm:col-span-2" type="date" min={week} max={addDaysISO(week, 6)} value={a.date} onChange={(e) => upd(i, 'date', e.target.value)} />
@@ -135,7 +135,7 @@ export default function Checkin() {
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-ink/[.08] bg-white/50 p-5 text-sm text-ink-soft">Your ready-to-paste record for the state portal appears here.</div>
+            <div className="rounded-[12px] border border-ink/[.08] bg-white/50 p-5 text-sm text-ink-soft">Your ready-to-paste record for the state portal appears here.</div>
           )}
           <div className="retro-card-soft p-5">
             <div className="mono-label text-ink-soft">Runway now</div>

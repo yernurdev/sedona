@@ -82,7 +82,7 @@ function Runway({ p, caseId }: { p: PlanT; caseId: string }) {
       <SectionTitle kicker="Runway" title={`${p.runway.months.toFixed(1)} months of cash`}>Week by week, assuming no new job. Switch the insurance option to see the difference.</SectionTitle>
       <div className="mb-4 flex flex-wrap gap-2">
         {Object.keys(p.runway.byOption).map((k) => (
-          <button key={k} onClick={() => setOpt(k)} className={`rounded-full border px-4 py-1.5 text-sm ${opt === k ? 'border-ink bg-ink text-white' : 'border-ink/10 bg-white'}`}>
+          <button key={k} onClick={() => setOpt(k)} className={`rounded-[10px] border px-4 py-1.5 text-sm ${opt === k ? 'border-ink bg-ink text-white' : 'border-ink/10 bg-white'}`}>
             {optionName[k]} · <span className="num">{p.runway.byOption[k].months.toFixed(1)} mo</span>
           </button>
         ))}
@@ -209,12 +209,12 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
           <div className="mt-3 flex flex-wrap gap-2">
             {asks.map(([id, label]) => (
               <button key={id} onClick={() => setSel((x) => (x.includes(id) ? x.filter((y) => y !== id) : [...x, id]))}
-                className={`rounded-full border px-3 py-1 text-sm ${sel.includes(id) ? 'border-brand bg-brand-soft text-brand-deep' : 'border-ink/10 bg-white'}`}>{label}</button>
+                className={`rounded-[10px] border px-3 py-1 text-sm ${sel.includes(id) ? 'border-brand bg-brand-soft text-brand-deep' : 'border-ink/10 bg-white'}`}>{label}</button>
             ))}
           </div>
           <div className="mt-3 flex gap-2">
             {(['polite', 'firm'] as const).map((t) => (
-              <button key={t} onClick={() => setTone(t)} className={`mono-label rounded-full border px-3 py-1 ${tone === t ? 'border-ink bg-ink text-white' : 'border-ink/10'}`}>{t}</button>
+              <button key={t} onClick={() => setTone(t)} className={`mono-label rounded-[10px] border px-3 py-1 ${tone === t ? 'border-ink bg-ink text-white' : 'border-ink/10'}`}>{t}</button>
             ))}
           </div>
           <button className="btn btn-primary btn-sm mt-4" onClick={() => letter.mutate()} disabled={letter.isPending || sel.length === 0}>
@@ -222,7 +222,7 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
           </button>
           {letter.error && <div className="mt-3"><ErrorBox error={letter.error} onRetry={() => letter.mutate()} /></div>}
           {letter.data && (
-            <div className="mt-4 rounded-2xl bg-cream p-4 text-sm">
+            <div className="mt-4 rounded-[12px] bg-cream p-4 text-sm">
               <div className="font-semibold">Subject: {letter.data.subject}</div>
               <p className="mt-2 whitespace-pre-line">{letter.data.body}</p>
               <button className="btn btn-ghost btn-sm mt-3" onClick={() => { navigator.clipboard.writeText(`Subject: ${letter.data!.subject}\n\n${letter.data!.body}`); setCopied(true) }}>
@@ -283,7 +283,7 @@ export default function Plan() {
     if (status === 402)
       return (
         <div className="mx-auto max-w-xl px-4 py-16 text-center">
-          <h1 className="text-2xl font-semibold">This plan is locked</h1>
+          <h1 className="text-2xl font-[460]">This plan is locked</h1>
           <Link to={`/pay/${caseId}`} className="btn btn-primary mt-4">Unlock for $39</Link>
         </div>
       )
@@ -292,9 +292,9 @@ export default function Plan() {
   const p = q.data!
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-8 flex gap-1 overflow-x-auto rounded-full border border-ink/[.07] bg-white p-1 [scrollbar-width:none]">
+      <div className="mb-8 flex gap-1 overflow-x-auto rounded-[12px] border border-ink/[.07] bg-white p-1 [scrollbar-width:none]">
         {tabs.map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'bg-brand text-white' : 'hover:bg-cream-deep'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`whitespace-nowrap rounded-[10px] px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'bg-brand text-white' : 'hover:bg-cream-deep'}`}>
             {t}
           </button>
         ))}

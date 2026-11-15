@@ -5,7 +5,7 @@ import { useState, type ReactNode } from 'react'
 export function Tag({ children, tone = 'ink' }: { children: ReactNode; tone?: 'ink' | 'brand' | 'wine' | 'sky' | 'ok' | 'muted' }) {
   return (
     <span
-      className={clsx('inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-medium', {
+      className={clsx('inline-flex items-center gap-1 whitespace-nowrap rounded-[10px] px-2.5 py-1 text-[12px] font-medium', {
         'bg-ink text-white': tone === 'ink',
         'bg-wine/10 text-wine-deep': tone === 'wine',
         'bg-brand-soft text-brand-deep': tone === 'brand' || tone === 'sky',
@@ -32,7 +32,7 @@ export function Spinner({ label = 'Calculating' }: { label?: string }) {
 export function ErrorBox({ error, onRetry }: { error: unknown; onRetry?: () => void }) {
   const msg = error instanceof Error ? error.message : 'Something went wrong.'
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-wine/20 bg-wine/[.04] p-4 text-sm" role="alert">
+    <div className="flex items-start gap-3 rounded-[12px] border border-wine/20 bg-wine/[.04] p-4 text-sm" role="alert">
       <AlertTriangle className="mt-0.5 size-4 shrink-0 text-wine" />
       <div className="flex-1">{msg}</div>
       {onRetry && (
@@ -55,7 +55,7 @@ export function HowCalc({ title = 'How we calculated this', children }: { title?
       >
         <Info className="size-3.5" /> {title}
       </button>
-      {open && <div className="mt-3 space-y-2 rounded-2xl bg-cream p-4 text-sm leading-relaxed text-ink-soft">{children}</div>}
+      {open && <div className="mt-3 space-y-2 rounded-[12px] bg-cream p-4 text-sm leading-relaxed text-ink-soft">{children}</div>}
     </div>
   )
 }
@@ -73,7 +73,7 @@ export function SectionTitle({ kicker, title, children }: { kicker: string; titl
   return (
     <div className="mb-5">
       <div className="text-[13px] font-medium text-brand-deep">{kicker}</div>
-      <h2 className="mt-1.5 text-3xl font-semibold sm:text-4xl">{title}</h2>
+      <h2 className="mt-1.5 text-3xl font-[460] sm:text-4xl">{title}</h2>
       {children && <p className="mt-2 max-w-2xl leading-relaxed text-ink-soft">{children}</p>}
     </div>
   )

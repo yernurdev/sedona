@@ -119,7 +119,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm transition-colors ${checked ? 'border-ink bg-brand-soft' : 'border-ink/10 bg-white'}`}
+      className={`flex w-full items-center justify-between rounded-[12px] border px-4 py-3 text-left text-sm transition-colors ${checked ? 'border-ink bg-brand-soft' : 'border-ink/10 bg-white'}`}
       aria-pressed={checked}
     >
       {label}
@@ -181,7 +181,7 @@ export default function Quiz() {
       </Field>
       {states.error && <ErrorBox error={states.error} onRetry={() => states.refetch()} />}
       {unsupported && (
-        <div className="rounded-2xl bg-brand-soft p-4 text-sm">
+        <div className="rounded-[12px] bg-brand-soft p-4 text-sm">
           <b>{selected.name} is coming soon.</b> We only show numbers we can source, so we support Missouri, Texas, Michigan, California and Florida
           today. Try the sample case to see how it works.
         </div>
@@ -266,7 +266,7 @@ export default function Quiz() {
             exit={{ opacity: 0, x: -24 * dir }}
             transition={{ duration: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
           >
-            <h1 className="text-2xl font-semibold sm:text-3xl">{steps[step].title}</h1>
+            <h1 className="text-2xl font-[460] sm:text-3xl">{steps[step].title}</h1>
             <p className="mb-6 mt-1 text-ink-soft">{steps[step].hint}</p>
             {body[step]}
           </motion.div>

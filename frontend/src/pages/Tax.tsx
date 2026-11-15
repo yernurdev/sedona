@@ -35,7 +35,7 @@ export default function Tax() {
           </div>
         ))}
       </div>
-      <div className={`mt-5 rounded-3xl border p-6 ${t.aptc && t.aptc.excess > 0 ? 'border-wine/25 bg-wine/[.04]' : 'border-ink/[.07] bg-white/70'}`}>
+      <div className={`mt-5 rounded-[16px] border p-6 ${t.aptc && t.aptc.excess > 0 ? 'border-wine/25 bg-wine/[.04]' : 'border-ink/[.07] bg-white/70'}`}>
         <div className="font-semibold">Marketplace subsidy reconciliation</div>
         {t.aptc ? (
           <>

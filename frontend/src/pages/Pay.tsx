@@ -61,7 +61,7 @@ export default function Pay() {
     <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 md:grid-cols-2">
       <div>
         <div className="text-[13px] font-medium text-brand-deep">Transition plan</div>
-        <h1 className="mt-2 text-5xl font-semibold">
+        <h1 className="mt-2 text-5xl font-[460]">
           <span className="num">${price.firstMonth}</span> first month
         </h1>
         <p className="mt-1 text-lg text-ink-soft">then <span className="num">${price.thenMonthly}</span>/mo while you search. Cancel anytime.</p>
@@ -81,7 +81,7 @@ export default function Pay() {
           <div className="text-lg font-semibold">Checkout</div>
           <Tag tone="brand">Test mode · no real charge</Tag>
         </div>
-        <div className="mt-4 rounded-2xl bg-brand-soft p-4 text-sm">
+        <div className="mt-4 rounded-[12px] bg-brand-soft p-4 text-sm">
           <div className="mb-1 text-[13px] font-medium text-brand-deep">Use the test card</div>
           <div className="num text-lg font-bold">{p.testCard}</div>
           <div className="text-ink-soft">Any future date · any 3-digit CVC</div>
@@ -104,7 +104,7 @@ export default function Pay() {
             }}
           >
             <label className="text-sm font-medium" htmlFor="cc">Card information</label>
-            <div className="mt-1.5 overflow-hidden rounded-[14px] border border-ink/[.12] bg-white focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/20">
+            <div className="mt-1.5 overflow-hidden rounded-[10px] border border-ink/[.12] bg-white focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/20">
               <div className="flex items-center gap-2 border-b border-ink/[.08] px-3.5">
                 <input id="cc" className="num w-full py-3 text-base outline-none placeholder:text-[#A7A3A0]" placeholder="1234 1234 1234 1234" inputMode="numeric" autoComplete="cc-number"
                   value={card} onChange={(e) => setCard(fmtCard(e.target.value))} />

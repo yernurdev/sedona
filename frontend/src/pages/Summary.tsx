@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSummary } from '../api/hooks'
 import CalcSteps, { shouldShowSteps } from '../components/CalcSteps'
-import { ErrorBox, Estimate, HowCalc, Spinner, Tag } from '../components/ui'
+import { ErrorBox, Estimate, HowCalc, Spinner } from '../components/ui'
 import { days, fmtDate, optionName, usd } from '../lib/format'
 
 const locked = [
@@ -40,12 +40,8 @@ export default function Summary() {
   const nd = s.nextDeadline
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex flex-wrap items-center gap-2">
-        {s.isSample && <Tag tone="brand">Sample data</Tag>}
-        <Tag tone="muted">As of {fmtDate(s.currentDate)}</Tag>
-      </div>
-      <h1 className="mt-4 text-4xl font-semibold sm:text-6xl">Your three numbers</h1>
-      <p className="mt-3 max-w-2xl text-lg text-ink-soft">Calculated from your answers with 2026 federal and state rules.</p>
+      <h1 className="mt-2 text-4xl font-[460] sm:text-6xl">Your three numbers</h1>
+      <p className="mt-3 max-w-2xl text-lg text-ink-soft">Calculated from your answers with 2026 federal and state rules, as of {fmtDate(s.currentDate)}.</p>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-3">
         <Stat k="Health insurance per month" delay={0}>
@@ -122,7 +118,7 @@ export default function Summary() {
         </div>
       ) : (
         <section className="mt-14">
-          <h2 className="text-2xl font-semibold sm:text-3xl">In your full plan</h2>
+          <h2 className="text-2xl font-[460] sm:text-3xl">In your full plan</h2>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {locked.map(([t, d]) => (
               <div key={t} className="retro-card-soft p-5">
@@ -134,7 +130,7 @@ export default function Summary() {
               </div>
             ))}
           </div>
-          <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-3xl bg-ink p-7 text-white sm:flex-row sm:items-center sm:p-9">
+          <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-[16px] bg-ink p-7 text-white sm:flex-row sm:items-center sm:p-9">
             <div>
               <div className="text-2xl font-semibold">One insurance mistake costs $2,000–5,000.</div>
               <div className="mt-1 text-white/60">$39 for the first month, then $14.99/mo while you search. Cancel anytime.</div>

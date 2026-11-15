@@ -1,54 +1,91 @@
 import { useMutation } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { ArrowUpRight, CalendarCheck, HeartPulse, LineChart, Receipt } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { post } from '../api/client'
 import { ErrorBox } from '../components/ui'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-const steps = [
-  { icon: HeartPulse, k: 'Day 0', t: 'Health insurance, decoded', d: 'COBRA, the Marketplace and your spouse’s plan, priced on the income you will actually have this year.' },
-  { icon: CalendarCheck, k: 'Every week', t: 'Never miss a benefit check', d: 'Log job-search activities in seconds and get a record formatted for your state portal.' },
-  { icon: LineChart, k: 'The offer', t: 'Leave without a surprise', d: 'Compare offers after benefits, bridge the coverage gap and catch a subsidy clawback early.' },
-  { icon: Receipt, k: 'Tax day', t: 'Know before April', d: 'Tax on unemployment and severance plus the Marketplace reconciliation, ahead of filing.' },
-]
-
-const facts = [
-  ['$2,406', 'per month', 'Average family COBRA premium in 2026 (KFF, ×102%)'],
-  ['400%', 'of poverty line', 'Above it, Marketplace subsidies stop entirely since 2026'],
-  ['$0', 'repayment cap', 'Excess subsidy is repaid in full from tax year 2026 (IRS)'],
-]
-
-function Preview() {
+function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
   return (
-    <div className="retro-card mx-auto w-full max-w-3xl p-2 text-left">
-      <div className="rounded-[18px] border border-ink/[.06] bg-cream/60 p-5 sm:p-7">
-        <div className="flex items-center justify-between text-[13px] text-ink-soft">
-          <span>Jessica · Austin, TX · family of 3</span>
-          <span className="rounded-full bg-brand-soft px-2.5 py-1 text-[12px] font-medium text-brand-deep">Sample</span>
-        </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-[13px] text-ink-soft">Insurance / month</div>
-            <div className="num mt-2 text-3xl font-semibold text-brand">$734</div>
-            <div className="num text-[13px] text-ink-soft line-through">COBRA $2,406</div>
-          </div>
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-[13px] text-ink-soft">Money lasts</div>
-            <div className="num mt-2 text-3xl font-semibold">8.3 mo</div>
-            <div className="text-[13px] text-ink-soft">with Marketplace</div>
-          </div>
-          <div className="rounded-2xl bg-white p-4">
-            <div className="text-[13px] text-ink-soft">Next deadline</div>
-            <div className="mt-2 text-lg font-semibold leading-tight">File for unemployment</div>
-            <div className="text-[13px] text-ink-soft">this week</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <motion.div className={className} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.6, delay, ease }}>
+      {children}
+    </motion.div>
   )
 }
+
+function Panel({ children }: { children: ReactNode }) {
+  return <div className="retro-card w-full max-w-md p-5 text-left">{children}</div>
+}
+
+const InsuranceVisual = () => (
+  <Panel>
+    <div className="text-[12px] text-ink-soft">Health insurance per month · Austin, TX · family of 3</div>
+    {[
+      ['COBRA', '$2,406', false],
+      ['Marketplace (ACA)', '$734', true],
+      ['Spouse’s plan', 'ask HR', false],
+    ].map(([k, v, best]) => (
+      <div key={k as string} className={`mt-2 flex items-baseline justify-between rounded-[10px] px-3 py-2.5 ${best ? 'bg-brand-soft' : 'bg-cream/70'}`}>
+        <span className="text-sm">{k}</span>
+        <span className={`num text-xl ${best ? 'font-semibold text-brand-deep' : 'text-ink-soft'}`}>{v}</span>
+      </div>
+    ))}
+    <div className="mt-3 text-[12px] text-ink-soft">Elect COBRA by Jan 29 · retroactive if you need care</div>
+  </Panel>
+)
+
+const CheckinVisual = () => (
+  <Panel>
+    <div className="flex items-center justify-between">
+      <div className="text-[12px] text-ink-soft">Week of Nov 22 · Texas requires 3</div>
+      <span className="rounded-[7px] bg-ok/10 px-2 py-0.5 text-[12px] font-medium text-ok">Ready to certify</span>
+    </div>
+    {['Acme · Marketing Manager', 'Globex · Brand Lead', 'Initech · Sr. Marketing Manager'].map((r) => (
+      <div key={r} className="mt-2 flex items-center gap-2.5 rounded-[10px] bg-cream/70 px-3 py-2.5 text-sm">
+        <span className="grid size-5 place-items-center rounded-[6px] bg-brand text-white"><Check className="size-3" /></span>
+        {r}
+      </div>
+    ))}
+    <div className="mt-3 text-[12px] text-ink-soft">Formatted for your state portal · CSV ready</div>
+  </Panel>
+)
+
+const OfferVisual = () => (
+  <Panel>
+    <div className="text-[12px] text-ink-soft">Offer from Globex · $130,000 base</div>
+    <div className="num mt-1 text-3xl font-medium tracking-[-0.05em]">$131,200<span className="text-base text-ink-soft"> / yr after benefits</span></div>
+    <div className="mt-4 rounded-[10px] border border-wine/20 bg-wine/[.04] p-3 text-sm">
+      <div className="font-medium text-wine-deep">You could owe $2,442 in April</div>
+      <div className="mt-0.5 text-[13px] text-ink-soft">Report new income at healthcare.gov within 30 days.</div>
+    </div>
+  </Panel>
+)
+
+const TaxVisual = () => (
+  <Panel>
+    <div className="text-[12px] text-ink-soft">Tax preview · 2026</div>
+    {[
+      ['Unemployment benefits', '$3,462'],
+      ['Tax still owed on them', '$415'],
+      ['Severance withheld at 22%', '$5,060'],
+    ].map(([k, v]) => (
+      <div key={k} className="mt-2 flex justify-between border-b border-ink/[.06] pb-2 text-sm">
+        <span className="text-ink-soft">{k}</span>
+        <span className="num font-medium">{v}</span>
+      </div>
+    ))}
+  </Panel>
+)
+
+const features = [
+  { a: 'Insurance, decoded.', b: 'One honest price each.', d: 'COBRA, the Marketplace and your spouse’s plan, priced on the income you will actually have this year.', v: <InsuranceVisual /> },
+  { a: 'Never miss a check.', b: 'Certify in a minute.', d: 'Paste job links, get a work search record formatted for your state portal, and watch your runway update.', v: <CheckinVisual /> },
+  { a: 'Got an offer?', b: 'Leave without a surprise.', d: 'Value the offer after benefits, bridge the coverage gap and catch a subsidy clawback before it lands.', v: <OfferVisual /> },
+  { a: 'Tax day.', b: 'Know before April.', d: 'Tax on unemployment and severance plus the Marketplace reconciliation, ahead of filing.', v: <TaxVisual /> },
+]
 
 export default function Landing() {
   const nav = useNavigate()
@@ -58,98 +95,92 @@ export default function Landing() {
   })
   return (
     <>
-      <section className="glow relative">
-        <div className="mx-auto max-w-6xl px-4 pb-16 pt-14 text-center sm:pt-24">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
-            <div className="inline-flex items-center gap-2 rounded-full border border-ink/[.08] bg-white/80 px-3 py-1.5 text-[13px] text-ink-soft">
-              <span className="size-1.5 rounded-full bg-brand" /> For US workers who were just laid off
-            </div>
-            <h1 className="mx-auto mt-6 max-w-4xl text-[44px] font-semibold leading-[1.02] sm:text-[76px]">
+      <section className="glow -mt-[68px] pt-[68px]">
+        <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 text-center sm:pt-14">
+          <motion.img
+            src="/icon.png"
+            alt=""
+            aria-hidden
+            className="mx-auto size-24 drop-shadow-[0_24px_30px_rgba(30,40,60,.2)] sm:size-32"
+            initial={{ opacity: 0, rotate: -8 }}
+            animate={{ opacity: 1, y: [0, -6, 0], rotate: -8 }}
+            transition={{ opacity: { duration: 0.6 }, y: { duration: 6, repeat: Infinity, ease: 'easeInOut' } }}
+          />
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease }}>
+            <h1 className="mx-auto mt-8 max-w-4xl text-[46px] font-[460] leading-[1] sm:text-[84px]">
               Lose your job,
               <br />
-              <span className="text-gradient">not your money.</span>
+              not your <span className="text-gradient">money</span>.
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft sm:text-lg">
-              You’ll find the next job. We handle the money side of the months in between: health insurance, unemployment, severance, the offer and taxes.
+            <p className="mx-auto mt-6 max-w-md text-[16px] leading-relaxed text-ink-soft">
+              The money side of the months between jobs: insurance, unemployment, the offer and taxes. Decoded in two minutes.
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link to="/start" className="btn btn-primary w-full sm:w-auto">
-                Start my plan <ArrowUpRight className="size-4" />
+            <div className="mt-8 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
+              <Link to="/start" className="btn btn-dark w-full sm:w-auto">
+                Start my plan <span className="arrow"><ArrowUpRight className="size-3.5" /></span>
               </Link>
               <button className="btn btn-sky w-full sm:w-auto" onClick={() => sample.mutate()} disabled={sample.isPending}>
-                {sample.isPending ? 'Opening sample…' : 'See a sample case'}
+                {sample.isPending ? 'Opening sample…' : 'See a sample case'} <span className="arrow"><ArrowUpRight className="size-3.5" /></span>
               </button>
             </div>
             {sample.error && <div className="mx-auto mt-4 max-w-md text-left"><ErrorBox error={sample.error} onRetry={() => sample.mutate()} /></div>}
-            <p className="mt-4 text-[13px] text-ink-soft">Takes 2 minutes · No login · No bank connection · No SSN</p>
-          </motion.div>
-          <motion.div className="mt-14" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease }}>
-            <Preview />
+            <p className="mt-5 text-[12.5px] text-ink-soft">No login · No bank connection · No SSN</p>
           </motion.div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="grid gap-px overflow-hidden rounded-3xl border border-ink/[.07] bg-ink/[.07] sm:grid-cols-3">
-          {facts.map(([v, u, s]) => (
-            <div key={s} className="bg-cream p-6">
-              <div className="num text-4xl font-semibold text-brand">{v}</div>
-              <div className="text-sm font-medium">{u}</div>
-              <p className="mt-2 text-sm text-ink-soft">{s}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-10">
-        <div className="max-w-2xl">
-          <h2 className="text-4xl font-semibold leading-tight sm:text-5xl">
-            One event, start to finish.
-            <br />
-            <span className="text-ink-soft">Six to eight money decisions in 60 days.</span>
-          </h2>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s.t}
-              className="retro-card-soft p-6"
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.45, delay: i * 0.06, ease }}
-            >
-              <div className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-deep">
-                <s.icon className="size-5" />
-              </div>
-              <div className="mt-5 text-[13px] text-ink-soft">{s.k}</div>
-              <h3 className="mt-1 text-lg font-semibold">{s.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{s.d}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 py-10">
-        <div className="grid gap-4 md:grid-cols-3">
+      <section className="mx-auto max-w-6xl px-4">
+        <div className="grid gap-px overflow-hidden rounded-[16px] bg-ink/[.07] sm:grid-cols-3">
           {[
-            ['We calculate, you decide', 'Every number shows its formula, source and date. We never tell you which plan to pick.'],
-            ['No commissions', 'We don’t sell insurance. You pay us, so we work for you.'],
-            ['Only numbers', 'No SSN, no account numbers, no bank login. Just dates and amounts.'],
-          ].map(([t, d]) => (
-            <div key={t} className="border-t border-ink/10 pt-5">
-              <h4 className="font-semibold">{t}</h4>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{d}</p>
+            ['$2,406', 'Average family COBRA premium per month in 2026', 'KFF, ×102%'],
+            ['400%', 'of the poverty line: above it, subsidies stop', 'Since January 2026'],
+            ['$0', 'cap on repaying excess subsidy', 'IRS, tax year 2026'],
+          ].map(([v, d, s]) => (
+            <div key={d} className="bg-cream p-6 sm:p-8">
+              <div className="num text-5xl font-[460] tracking-[-0.06em] text-brand-deep">{v}</div>
+              <p className="mt-3 text-[15px] leading-snug">{d}</p>
+              <p className="mt-1 text-[12.5px] text-ink-soft">{s}</p>
             </div>
           ))}
         </div>
-        <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl bg-ink p-8 text-white sm:flex-row sm:items-center sm:p-10">
-          <div>
-            <h3 className="text-3xl font-semibold">Your next 60 days, decoded.</h3>
-            <p className="mt-2 text-white/60">Answer 8 short questions. See your numbers right away.</p>
+      </section>
+
+      <section className="mx-auto max-w-6xl space-y-24 px-4 py-24 sm:space-y-32 sm:py-32">
+        {features.map((f, i) => (
+          <div key={f.a} className="grid items-center gap-10 md:grid-cols-2">
+            <Reveal className={i % 2 ? 'md:order-2' : ''}>
+              <h2 className="text-[38px] font-[460] leading-[1.02] sm:text-[56px]">
+                {f.a}
+                <br />
+                <span className="text-brand">{f.b}</span>
+              </h2>
+              <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft">{f.d}</p>
+              <Link to="/start" className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-deep transition-all hover:gap-2.5">
+                Start my plan <ArrowRight className="size-4" />
+              </Link>
+            </Reveal>
+            <Reveal delay={0.1} className={`flex ${i % 2 ? 'md:order-1 md:justify-start' : 'md:justify-end'}`}>
+              {f.v}
+            </Reveal>
           </div>
-          <Link to="/start" className="btn btn-primary">Start my plan <ArrowUpRight className="size-4" /></Link>
-        </div>
+        ))}
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-10 text-center">
+        <Reveal>
+          <h2 className="text-[44px] font-[460] leading-[1] sm:text-[72px]">
+            We calculate.
+            <br />
+            <span className="text-brand">You decide.</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft">
+            Every number shows its formula, source and date. We don’t sell insurance or take commissions, and we never ask for your SSN or bank login.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-2.5 sm:flex-row">
+            <Link to="/start" className="btn btn-dark">Start my plan <span className="arrow"><ArrowUpRight className="size-3.5" /></span></Link>
+            <Link to="/how" className="btn btn-sky">How we calculate <span className="arrow"><ArrowUpRight className="size-3.5" /></span></Link>
+          </div>
+        </Reveal>
       </section>
     </>
   )
