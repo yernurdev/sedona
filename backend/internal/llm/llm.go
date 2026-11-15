@@ -24,7 +24,7 @@ type Client struct {
 
 var compatDefaults = map[string][2]string{
 	"gemini": {"https://generativelanguage.googleapis.com/v1beta/openai", "gemini-2.5-flash"},
-	"groq":   {"https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"},
+	"groq":   {"https://api.groq.com/openai/v1", "openai/gpt-oss-120b"},
 	"openai": {"https://api.openai.com/v1", "gpt-4o-mini"},
 }
 
