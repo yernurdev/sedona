@@ -29,6 +29,13 @@ type RunwayInput struct {
 	Insurance func(t time.Time) Cents
 }
 
+// earningEntry is a pre-parsed earnings entry used to avoid repeated ParseDate
+// calls inside the hot loop.
+type earningEntry struct {
+	date   time.Time
+	amount Cents
+}
+
 // Runway simulates cash week by week assuming no new job (spec 6.7).
 func (e *Engine) Runway(in *CaseInput, d *Dates, r RunwayInput) RunwayOption {
 	sevNet, _, _, _ := e.severanceNet(in)
@@ -39,6 +46,16 @@ func (e *Engine) Runway(in *CaseInput, d *Dates, r RunwayInput) RunwayOption {
 	sevAdded := false
 	opt := RunwayOption{}
 	expenses := Dollars(in.MonthlyExpenses)
+
+	// FIX: pre-parse Earnings dates once before the hot loop to avoid
+	// len(Earnings) × runwayHorizonWeeks repeated ParseDate calls.
+	parsedEarnings := make([]earningEntry, 0, len(r.Earnings))
+	for k, v := range r.Earnings {
+		if t, err := ParseDate(k); err == nil {
+			parsedEarnings = append(parsedEarnings, earningEntry{t, v})
+		}
+	}
+
 	for i := 0; i < runwayHorizonWeeks; i++ {
 		ws := addDays(r.Start, 7*i)
 		we := addDays(ws, 7)
@@ -51,9 +68,9 @@ func (e *Engine) Runway(in *CaseInput, d *Dates, r RunwayInput) RunwayOption {
 				cash += wba
 			}
 		}
-		for k, v := range r.Earnings {
-			if t, err := ParseDate(k); err == nil && !t.Before(ws) && t.Before(we) {
-				cash += v
+		for _, entry := range parsedEarnings {
+			if !entry.date.Before(ws) && entry.date.Before(we) {
+				cash += entry.amount
 			}
 		}
 		monthly := expenses

@@ -71,7 +71,7 @@ func (s *Server) patchSession(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Email string `json:"email"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -102,7 +102,7 @@ func (s *Server) validateInput(w http.ResponseWriter, in *calc.CaseInput) bool {
 
 func (s *Server) createCase(w http.ResponseWriter, r *http.Request) {
 	var in calc.CaseInput
-	if err := decode(r, &in); err != nil {
+	if err := decode(r, w, &in); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}

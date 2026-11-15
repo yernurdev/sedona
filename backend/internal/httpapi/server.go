@@ -32,7 +32,11 @@ type Server struct {
 }
 
 func (s *Server) Handler() http.Handler {
-	s.limiter = newIPLimiter(600, time.Minute)
+	// FIX: initialise limiter once here (idempotent guard) instead of on every Handler() call.
+	if s.limiter == nil {
+		s.limiter = newIPLimiter(600, time.Minute)
+		s.limiter.startGC(context.Background())
+	}
 	m := http.NewServeMux()
 	m.HandleFunc("GET /api/health", s.health)
 	m.HandleFunc("GET /api/meta/states", s.metaStates)
@@ -90,8 +94,10 @@ func (s *Server) internal(w http.ResponseWriter, r *http.Request, err error) {
 	writeErr(w, http.StatusInternalServerError, "internal", "Something went wrong on our side. Please try again.")
 }
 
-func decode(r *http.Request, v any) error {
-	r.Body = http.MaxBytesReader(nil, r.Body, 1<<20)
+// decode decodes a JSON request body into v.
+// FIX: pass w to MaxBytesReader so it can write 413 properly instead of panicking on nil.
+func decode(r *http.Request, w http.ResponseWriter, v any) error {
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
 	if err := dec.Decode(v); err != nil {
@@ -141,6 +147,8 @@ func (s *Server) auth(next http.HandlerFunc) http.HandlerFunc {
 func (s *Server) withCase(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := s.Store.GetCase(r.Context(), r.PathValue("id"))
+		// Security: intentionally return 404 for both "not found" and "belongs to
+		// a different session" to prevent case-ID enumeration attacks.
 		if errors.Is(err, store.ErrNotFound) || (err == nil && c.SessionID != sessionFrom(r).ID) {
 			writeErr(w, http.StatusNotFound, "not_found", "Case not found.")
 			return
@@ -166,6 +174,7 @@ func (s *Server) paid(next http.HandlerFunc) http.HandlerFunc {
 func (s *Server) cors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
+		allowed := false
 		for _, o := range s.Origins {
 			if o == origin && origin != "" {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
@@ -173,10 +182,17 @@ func (s *Server) cors(next http.Handler) http.Handler {
 				w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
 				w.Header().Set("Access-Control-Max-Age", "600")
+				allowed = true
 			}
 		}
 		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
+			// FIX: return 403 for preflight from unknown origins so browsers
+			// receive a clear CORS error rather than an ambiguous 204 with no headers.
+			if !allowed && origin != "" {
+				w.WriteHeader(http.StatusForbidden)
+			} else {
+				w.WriteHeader(http.StatusNoContent)
+			}
 			return
 		}
 		next.ServeHTTP(w, r)
@@ -212,6 +228,8 @@ func (s *Server) rateLimit(next http.Handler) http.Handler {
 	})
 }
 
+// ipLimiter is a simple sliding-window rate limiter keyed by IP address.
+// FIX: added startGC to periodically evict stale entries and prevent unbounded memory growth.
 type ipLimiter struct {
 	mu     sync.Mutex
 	limit  int
@@ -221,6 +239,41 @@ type ipLimiter struct {
 
 func newIPLimiter(limit int, window time.Duration) *ipLimiter {
 	return &ipLimiter{limit: limit, window: window, hits: map[string][]time.Time{}}
+}
+
+// startGC runs a background goroutine that sweeps stale IP entries every window interval.
+func (l *ipLimiter) startGC(ctx context.Context) {
+	go func() {
+		t := time.NewTicker(l.window)
+		defer t.Stop()
+		for {
+			select {
+			case <-t.C:
+				l.sweep()
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+}
+
+// sweep removes IP entries whose entire hit list has expired.
+func (l *ipLimiter) sweep() {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	cut := time.Now().Add(-l.window)
+	for key, h := range l.hits {
+		i := 0
+		for i < len(h) && h[i].Before(cut) {
+			i++
+		}
+		if i == len(h) {
+			// All hits are stale — evict the entry entirely.
+			delete(l.hits, key)
+		} else {
+			l.hits[key] = h[i:]
+		}
+	}
 }
 
 func (l *ipLimiter) allow(key string) bool {

@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+// acaChildAgeLimit: CMS benchmark premium age curve treats members under 21
+// as "children" with a capped age factor (ACA child-only plans, 45 CFR 156.80).
+const acaChildAgeLimit = 21
+
 // IncomePlan describes when a new job starts and what it pays.
 type IncomePlan struct {
 	Reemployed time.Time
@@ -76,7 +80,7 @@ func (e *Engine) benchmarkMonthly(in *CaseInput, year int) (Cents, bool, error) 
 	}
 	var kids, adults []int
 	for _, p := range in.Household {
-		if p.Age < 21 {
+		if p.Age < acaChildAgeLimit {
 			kids = append(kids, p.Age)
 		} else {
 			adults = append(adults, p.Age)

@@ -52,7 +52,7 @@ func (s *Server) hrLetter(w http.ResponseWriter, r *http.Request) {
 		Tone string   `json:"tone"`
 		Asks []string `json:"asks"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -106,7 +106,7 @@ func (s *Server) explain(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Topic string `json:"topic"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}

@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useForm, type FieldPath } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -10,6 +10,8 @@ import { post } from '../api/client'
 import { useStates } from '../api/hooks'
 import type { CaseInput, Person } from '../api/types'
 import { ErrorBox } from '../components/ui'
+
+const DRAFT_KEY = 'sedona_quiz_draft'
 
 const money = (label: string, required = true) =>
   z.string().refine((v) => (v.trim() === '' ? !required : !Number.isNaN(Number(v.replace(/[,$\s]/g, ''))) && Number(v.replace(/[,$\s]/g, '')) >= 0), {
@@ -45,7 +47,7 @@ const schema = z
     newSalary: money('expected salary', false),
   })
   .refine((v) => !v.hasSpouse || (Number(v.spouseAge) >= 18 && Number(v.spouseAge) <= 99), { path: ['spouseAge'], message: 'Spouse age 18–99' })
-  .refine((v) => v.coverageEndDate >= v.lastDay, { path: ['coverageEndDate'], message: 'Coverage can’t end before your last day' })
+  .refine((v) => v.coverageEndDate >= v.lastDay, { path: ['coverageEndDate'], message: 'Coverage can't end before your last day' })
 
 type Form = z.infer<typeof schema>
 
@@ -54,6 +56,38 @@ const endOfMonth = (() => {
   const d = new Date()
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).toISOString().slice(0, 10)
 })()
+
+const DEFAULT_VALUES: Form = {
+  state: '', lastDay: today, coverageEndDate: endOfMonth, cobraNoticeDate: '', annualSalary: '', ytdWages: '',
+  severanceGross: '0', severanceSignBy: '', severancePaidOn: '', groupLayoff: false, selfAge: '', hasSpouse: false,
+  spouseAge: '', spouseIncome: '0', kids: '', cobraLetter: '', spousePlan: '', fsaBalance: '0', savings: '',
+  monthlyExpenses: '', has401kLoan: false, weeks: '13', newSalary: '',
+}
+
+function loadDraft(): Partial<Form> {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+function saveDraft(values: Partial<Form>) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(values))
+  } catch {
+    // quota exceeded or private mode — silently ignore
+  }
+}
+
+function clearDraft() {
+  try {
+    localStorage.removeItem(DRAFT_KEY)
+  } catch {
+    // ignore
+  }
+}
 
 const steps: { title: string; hint: string; fields: FieldPath<Form>[] }[] = [
   { title: 'Where do you live?', hint: 'Unemployment rules and Medicaid depend on your state.', fields: ['state'] },
@@ -135,21 +169,27 @@ export default function Quiz() {
   const states = useStates()
   const [step, setStep] = useState(0)
   const [dir, setDir] = useState(1)
+
+  const draft = loadDraft()
   const { register, handleSubmit, trigger, watch, setValue, formState: { errors } } = useForm<Form>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
-    defaultValues: {
-      state: '', lastDay: today, coverageEndDate: endOfMonth, cobraNoticeDate: '', annualSalary: '', ytdWages: '',
-      severanceGross: '0', severanceSignBy: '', severancePaidOn: '', groupLayoff: false, selfAge: '', hasSpouse: false,
-      spouseAge: '', spouseIncome: '0', kids: '', cobraLetter: '', spousePlan: '', fsaBalance: '0', savings: '',
-      monthlyExpenses: '', has401kLoan: false, weeks: '13', newSalary: '',
-    },
+    defaultValues: { ...DEFAULT_VALUES, ...draft },
   })
+
+  // Persist form values to localStorage on every change (debounced via React render).
+  const v = watch()
+  useEffect(() => {
+    saveDraft(v)
+  }, [v])
+
   const create = useMutation({
     mutationFn: (v: Form) => post<{ caseId: string }>('/cases', toInput(v)),
-    onSuccess: (r) => nav(`/summary/${r.caseId}`),
+    onSuccess: (r) => {
+      clearDraft()
+      nav(`/summary/${r.caseId}`)
+    },
   })
-  const v = watch()
   const selected = states.data?.states.find((s) => s.code === v.state)
   const unsupported = selected && !selected.supported
 
@@ -205,16 +245,16 @@ export default function Quiz() {
       <div className="self-end"><Toggle label="Spouse on the plan" checked={v.hasSpouse} onChange={(x) => setValue('hasSpouse', x)} /></div>
       {v.hasSpouse && (
         <>
-          <Field label="Spouse’s age" error={e('spouseAge')}>{input('spouseAge', { inputMode: 'numeric' })}</Field>
-          <Field label="Spouse’s annual income ($)" error={e('spouseIncome')}>{input('spouseIncome', { inputMode: 'decimal' })}</Field>
+          <Field label="Spouse's age" error={e('spouseAge')}>{input('spouseAge', { inputMode: 'numeric' })}</Field>
+          <Field label="Spouse's annual income ($)" error={e('spouseIncome')}>{input('spouseIncome', { inputMode: 'decimal' })}</Field>
         </>
       )}
-      <Field label="Children’s ages (optional)" hint="Comma separated, e.g. 6, 9" error={e('kids')}>{input('kids', { placeholder: '6' })}</Field>
+      <Field label="Children's ages (optional)" hint="Comma separated, e.g. 6, 9" error={e('kids')}>{input('kids', { placeholder: '6' })}</Field>
     </div>,
     <div className="grid gap-4 sm:grid-cols-2" key="s4">
       <Field label="COBRA monthly cost from your letter ($)" hint="Empty = we estimate from KFF averages" error={e('cobraLetter')}>{input('cobraLetter', { inputMode: 'decimal' })}</Field>
       {v.hasSpouse && (
-        <Field label="Cost to join spouse’s plan, monthly ($)" hint="Ask your spouse’s HR. Optional" error={e('spousePlan')}>{input('spousePlan', { inputMode: 'decimal' })}</Field>
+        <Field label="Cost to join spouse's plan, monthly ($)" hint="Ask your spouse's HR. Optional" error={e('spousePlan')}>{input('spousePlan', { inputMode: 'decimal' })}</Field>
       )}
       <Field label="Health FSA balance left ($)" error={e('fsaBalance')}>{input('fsaBalance', { inputMode: 'decimal' })}</Field>
     </div>,

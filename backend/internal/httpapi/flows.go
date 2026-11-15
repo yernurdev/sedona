@@ -19,7 +19,7 @@ func (s *Server) runwayFor(cc *caseCtx) (*calc.Report, error) {
 
 func (s *Server) postCheckin(w http.ResponseWriter, r *http.Request) {
 	var body calc.CheckinInput
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -163,7 +163,7 @@ func (s *Server) evalOffers(cc *caseCtx, offers []store.Offer) ([]offerOut, erro
 
 func (s *Server) postOffer(w http.ResponseWriter, r *http.Request) {
 	var in calc.OfferInput
-	if err := decode(r, &in); err != nil {
+	if err := decode(r, w, &in); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -272,7 +272,7 @@ func (s *Server) demoAdvance(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Weeks int `json:"weeks"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -362,7 +362,7 @@ func (s *Server) checkout(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		CaseID string `json:"caseId"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
@@ -468,7 +468,7 @@ func (s *Server) testCheckout(w http.ResponseWriter, r *http.Request) {
 		Expiry string `json:"expiry"`
 		CVC    string `json:"cvc"`
 	}
-	if err := decode(r, &body); err != nil {
+	if err := decode(r, w, &body); err != nil {
 		writeErr(w, http.StatusBadRequest, "bad_request", err.Error())
 		return
 	}
