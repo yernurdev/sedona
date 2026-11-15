@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, Copy, Download, Link2, Plus, Trash2 } from 'lucide-react'
+import { AlertCircle, Check, Copy, Download, Link2, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { download, post } from '../api/client'
@@ -125,7 +125,7 @@ export default function Checkin() {
                 {result.compliant ? <Tag tone="ok"><Check className="size-3" /> ready to certify</Tag> : <Tag tone="wine">not enough yet</Tag>}
                 <span className="text-sm text-ink-soft">certify by {fmtDate(result.nextCertificationDate)}</span>
               </div>
-              {result.issues.length > 0 && <ul className="mt-3 space-y-1 text-sm text-wine">{result.issues.map((x) => <li key={x}>• {x}</li>)}</ul>}
+              {result.issues.length > 0 && <ul className="mt-3 space-y-1 text-sm text-wine">{result.issues.map((x) => <li key={x} className="flex gap-2"><AlertCircle className="mt-0.5 size-3.5 shrink-0" />{x}</li>)}</ul>}
               {result.earningsReminder && <p className="mt-3 rounded-xl bg-brand-soft p-3 text-sm">{result.earningsReminder}</p>}
               <pre className="num mt-3 max-h-56 overflow-auto whitespace-pre-wrap rounded-xl bg-ink p-3 text-xs text-cream">{result.record}</pre>
               <div className="mt-3 flex flex-wrap gap-2">

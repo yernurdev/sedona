@@ -1,6 +1,6 @@
 import { ArrowUpRight, FastForward } from 'lucide-react'
 import { Link, NavLink, useParams } from 'react-router-dom'
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useAdvance, useCaseInfo } from '../api/hooks'
 import { fmtDate } from '../lib/format'
 
@@ -57,10 +57,17 @@ function CaseNav({ caseId }: { caseId: string }) {
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { caseId } = useParams()
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 8)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
   return (
     <div className="flex min-h-dvh flex-col">
       {caseId && <DemoBar caseId={caseId} />}
-      <header className="sticky top-0 z-30 py-3">
+      <header className={`sticky top-0 z-30 py-3 transition-[background-color,border-color,backdrop-filter] duration-200 ${scrolled ? 'border-b border-ink/[.06] bg-cream/85 backdrop-blur-xl' : 'border-b border-transparent'}`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4">
           <Link to="/" className="flex h-11 items-center rounded-[12px] bg-white/85 px-3 shadow-[0_1px_2px_rgb(0_0_0/.04)] backdrop-blur" aria-label="Sedona home">
             <img src="/logo.png" alt="Sedona" className="h-[52px] w-auto max-w-none" />

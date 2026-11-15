@@ -256,7 +256,16 @@ func (s *Server) summary(w http.ResponseWriter, r *http.Request) {
 			"months": rep.Runway.Months, "basis": rep.Runway.Basis,
 			"byOption": map[string]any{"cobra": runwayMonths(rep, "cobra"), "aca": runwayMonths(rep, "aca"), "spouse": runwayMonths(rep, "spouse")},
 		},
-		"nextDeadline":   calc.NextDeadline(rep.Deadlines),
+		"nextDeadline": calc.NextDeadline(rep.Deadlines),
+		"upcoming":     upcoming(rep.Deadlines, 4),
+		"unemployment": map[string]any{
+			"weeklyBenefit": rep.Unemployment.WeeklyBenefit, "maxWeeks": rep.Unemployment.MaxWeeks,
+			"totalPotential": rep.Unemployment.TotalPotential, "waitingWeek": rep.Unemployment.WaitingWeek,
+			"workSearchRule": rep.Unemployment.WorkSearchRule, "portalUrl": rep.Unemployment.PortalURL,
+		},
+		"severance":      map[string]any{"gross": rep.Severance.Gross, "netEstimate": rep.Severance.NetEstimate, "signBy": rep.Severance.SignBy},
+		"acaQuotes":      acaQuotes(rep),
+		"firstSteps":     rep.Actions.Today,
 		"deadlineCount":  len(rep.Deadlines),
 		"lockedSections": []string{"fullPlan", "deadlines", "weeklyCheckin", "offer", "tax", "hrLetter"},
 		"disclaimer":     rep.Disclaimer,
@@ -296,4 +305,23 @@ func runwayMonths(rep *calc.Report, typ string) *float64 {
 func sortedWeeks(cis []store.Checkin) []store.Checkin {
 	sort.Slice(cis, func(i, j int) bool { return cis[i].WeekStart > cis[j].WeekStart })
 	return cis
+}
+
+func upcoming(ds []calc.Deadline, n int) []calc.Deadline {
+	out := []calc.Deadline{}
+	for _, d := range ds {
+		if !d.Passed && len(out) < n {
+			out = append(out, d)
+		}
+	}
+	return out
+}
+
+func acaQuotes(rep *calc.Report) []calc.ACAQuote {
+	for _, o := range rep.Insurance.Options {
+		if o.Type == "aca" {
+			return o.Quotes
+		}
+	}
+	return nil
 }

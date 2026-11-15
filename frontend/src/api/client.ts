@@ -2,6 +2,15 @@ export const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.rep
 
 const TOKEN_KEY = 'sedona.token'
 
+const friendly: Record<string, string> = {
+  llm_unavailable: 'Email drafting is temporarily unavailable. All numbers on this page are still correct.',
+  llm_failed: 'The writing service is busy right now. Try again in a few seconds.',
+  internal: 'We couldn’t finish this calculation. Please try again in a moment.',
+  payments_unavailable: 'Payments are temporarily unavailable. Please try again shortly.',
+  not_found: 'We couldn’t find this plan. It may belong to another browser session — start a new one.',
+  network: 'Can’t reach the server. Check your connection and try again.',
+}
+
 export class ApiError extends Error {
   status: number
   code: string
@@ -61,7 +70,7 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(init.headers ?? {}) },
     })
   } catch {
-    throw new ApiError(0, 'network', 'Network error. Check your connection and try again.')
+    throw new ApiError(0, 'network', friendly.network)
   }
   if (res.status === 401 && retry) {
     memoryToken = null
@@ -70,10 +79,16 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
   }
   if (res.status === 204) return undefined as T
   const text = await res.text()
-  const body = text ? JSON.parse(text) : {}
+  let body: { error?: { code?: string; message?: string } } = {}
+  try {
+    body = text ? JSON.parse(text) : {}
+  } catch {
+    throw new ApiError(res.status, 'internal', friendly.internal)
+  }
   if (!res.ok) {
-    const e = body?.error ?? {}
-    throw new ApiError(res.status, e.code ?? 'error', e.message ?? 'Something went wrong.')
+    const e = body.error ?? {}
+    const code = e.code ?? 'error'
+    throw new ApiError(res.status, code, friendly[code] ?? e.message ?? 'Something went wrong. Please try again.')
   }
   return body as T
 }

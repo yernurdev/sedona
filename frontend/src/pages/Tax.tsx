@@ -1,3 +1,4 @@
+import { Info } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTax } from '../api/hooks'
@@ -47,7 +48,7 @@ export default function Tax() {
           <p className="mt-2 text-sm text-ink-soft">Add an offer in <Link className="text-brand underline" to={`/offer/${caseId}`}>Got an offer?</Link> to project your Form 8962 reconciliation.</p>
         )}
       </div>
-      <ul className="mt-5 space-y-1 text-sm text-ink-soft">{t.notes.map((n) => <li key={n}>• {n}</li>)}</ul>
+      <ul className="mt-5 space-y-2 text-sm text-ink-soft">{t.notes.map((n) => <li key={n} className="flex gap-2"><Info className="mt-0.5 size-3.5 shrink-0 text-brand" />{n}</li>)}</ul>
       <p className="mt-2 text-xs"><Src href={t.source}>IRS 2026 brackets</Src></p>
     </div>
   )

@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { CalendarPlus, Copy, ExternalLink, Mail } from 'lucide-react'
+import { CalendarPlus, Copy, ExternalLink, Info, Mail } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Area, AreaChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { API_URL, api, getToken, post } from '../api/client'
 import { usePlan } from '../api/hooks'
 import type { Plan as PlanT } from '../api/types'
+import Checklist from '../components/Checklist'
 import Explain from '../components/Explain'
 import { ErrorBox, Estimate, HowCalc, SectionTitle, Spinner, Src, Tag } from '../components/ui'
 import { days, fmtDate, optionName, shortDate, usd } from '../lib/format'
@@ -31,7 +32,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
             {o.estimate && <div className="mt-2"><Estimate /></div>}
             {o.enrollBy && <div className="mt-3 text-sm"><b>Enroll by:</b> {fmtDate(o.enrollBy)}</div>}
             <ul className="mt-3 space-y-2 text-sm text-ink-soft">
-              {o.notes.map((n) => <li key={n}>• {n}</li>)}
+              {o.notes.map((n) => <li key={n} className="flex gap-2"><Info className="mt-0.5 size-3.5 shrink-0 text-brand" />{n}</li>)}
             </ul>
             {o.source && <div className="mt-3 text-xs"><Src href={o.source} /></div>}
           </div>
@@ -202,7 +203,7 @@ function Severance({ p, caseId }: { p: PlanT; caseId: string }) {
           </dl>
           {s.signBy && <p className="mt-3 text-sm"><b>Decide by:</b> {fmtDate(s.signBy)}. Don’t sign on day one.</p>}
           <div className="mt-4 font-semibold">Questions to ask HR before signing</div>
-          <ul className="mt-2 space-y-1.5 text-sm">{s.questionsForHR.map((q) => <li key={q}>☐ {q}</li>)}</ul>
+          <div className="mt-2"><Checklist items={s.questionsForHR} storageKey={`sedona.hr.${caseId}`} /></div>
         </div>
         <div className="retro-card p-5">
           <div className="flex items-center gap-2 font-semibold"><Mail className="size-4" /> Draft an email to HR</div>
@@ -246,7 +247,7 @@ function Actions({ p, caseId }: { p: PlanT; caseId: string }) {
         {cols.map(([t, items]) => (
           <div key={t} className="retro-card-soft p-5">
             <div className="text-[13px] font-medium text-brand-deep">{t}</div>
-            <ul className="mt-3 space-y-2 text-sm">{items.length ? items.map((i) => <li key={i}>☐ {i}</li>) : <li className="text-ink-soft">Nothing due.</li>}</ul>
+            <div className="mt-3"><Checklist items={items} storageKey={`sedona.actions.${caseId}`} /></div>
           </div>
         ))}
       </div>

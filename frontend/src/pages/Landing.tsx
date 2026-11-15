@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { post } from '../api/client'
 import { ErrorBox } from '../components/ui'
@@ -11,6 +11,20 @@ const ease = [0.22, 1, 0.36, 1] as const
 function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div className={className} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.6, delay, ease }}>
+      {children}
+    </motion.div>
+  )
+}
+
+// Moves its child slower than the page scroll for a depth effect.
+function Parallax({ children, distance = 60, className = '' }: { children: ReactNode; distance?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [distance, -distance])
+  const rotate = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [1.5, -1.5])
+  return (
+    <motion.div ref={ref} style={{ y, rotate }} className={className}>
       {children}
     </motion.div>
   )
@@ -89,6 +103,13 @@ const features = [
 
 export default function Landing() {
   const nav = useNavigate()
+  const reduce = useReducedMotion()
+  const { scrollY } = useScroll()
+  const iconY = useTransform(scrollY, [0, 600], reduce ? [0, 0] : [0, 180])
+  const iconRotate = useTransform(scrollY, [0, 600], reduce ? [-8, -8] : [-8, 18])
+  const iconScale = useTransform(scrollY, [0, 600], reduce ? [1, 1] : [1, 0.8])
+  const titleY = useTransform(scrollY, [0, 600], reduce ? [0, 0] : [0, 90])
+  const heroFade = useTransform(scrollY, [0, 520], reduce ? [1, 1] : [1, 0.15])
   const sample = useMutation({
     mutationFn: () => post<{ caseId: string }>('/cases/sample', {}),
     onSuccess: (r) => nav(`/summary/${r.caseId}`),
@@ -97,15 +118,18 @@ export default function Landing() {
     <>
       <section className="glow -mt-[68px] pt-[68px]">
         <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 text-center sm:pt-14">
-          <motion.img
-            src="/icon.png"
-            alt=""
-            aria-hidden
-            className="mx-auto size-24 drop-shadow-[0_24px_30px_rgba(30,40,60,.2)] sm:size-32"
-            initial={{ opacity: 0, rotate: -8 }}
-            animate={{ opacity: 1, y: [0, -6, 0], rotate: -8 }}
-            transition={{ opacity: { duration: 0.6 }, y: { duration: 6, repeat: Infinity, ease: 'easeInOut' } }}
-          />
+          <motion.div style={{ y: iconY, rotate: iconRotate, scale: iconScale }} className="mx-auto w-fit">
+            <motion.img
+              src="/icon.png"
+              alt=""
+              aria-hidden
+              className="size-24 drop-shadow-[0_24px_30px_rgba(30,40,60,.2)] sm:size-32"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: reduce ? 0 : [0, -6, 0] }}
+              transition={{ opacity: { duration: 0.6 }, y: { duration: 6, repeat: Infinity, ease: 'easeInOut' } }}
+            />
+          </motion.div>
+          <motion.div style={{ y: titleY, opacity: heroFade }}>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease }}>
             <h1 className="mx-auto mt-8 max-w-4xl text-[46px] font-[460] leading-[1] sm:text-[84px]">
               Lose your job,
@@ -125,6 +149,7 @@ export default function Landing() {
             </div>
             {sample.error && <div className="mx-auto mt-4 max-w-md text-left"><ErrorBox error={sample.error} onRetry={() => sample.mutate()} /></div>}
             <p className="mt-5 text-[12.5px] text-ink-soft">No login · No bank connection · No SSN</p>
+          </motion.div>
           </motion.div>
         </div>
       </section>
@@ -160,7 +185,7 @@ export default function Landing() {
               </Link>
             </Reveal>
             <Reveal delay={0.1} className={`flex ${i % 2 ? 'md:order-1 md:justify-start' : 'md:justify-end'}`}>
-              {f.v}
+              <Parallax className="w-full max-w-md">{f.v}</Parallax>
             </Reveal>
           </div>
         ))}

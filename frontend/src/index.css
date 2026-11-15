@@ -94,6 +94,9 @@
   .text-gradient {
     background: linear-gradient(92deg, #2F7FEA 0%, #4E9AFF 45%, #8DBFFF 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
+    display: inline-block;
+    padding: 0 .06em .14em 0;
+    margin: 0 -.06em -.14em 0;
   }
 }
 

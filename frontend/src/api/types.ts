@@ -43,6 +43,11 @@ export type Summary = {
   runway: { months: number; basis: string; byOption: Record<'cobra' | 'aca' | 'spouse', number | null> }
   nextDeadline: Deadline | null
   deadlineCount: number
+  upcoming: Deadline[]
+  unemployment: { weeklyBenefit: number; maxWeeks: number; totalPotential: number; waitingWeek: boolean; workSearchRule: string; portalUrl: string }
+  severance: { gross: number; netEstimate: number; signBy?: string }
+  acaQuotes: ACAQuote[] | null
+  firstSteps: string[]
   lockedSections: string[]
   disclaimer: string
 }

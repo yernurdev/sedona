@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Lock } from 'lucide-react'
+import { ArrowUpRight, Briefcase, CalendarClock, ExternalLink, Landmark, ListChecks, Lock, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSummary } from '../api/hooks'
 import CalcSteps, { shouldShowSteps } from '../components/CalcSteps'
+import Checklist from '../components/Checklist'
 import { ErrorBox, Estimate, HowCalc, Spinner } from '../components/ui'
 import { days, fmtDate, optionName, usd } from '../lib/format'
 
 const locked = [
-  ['Full insurance comparison', 'Three options side by side, with the retroactive COBRA window'],
+  ['Week-by-week runway chart', 'See exactly which week cash runs out under each insurance option'],
   ['Every deadline in your calendar', 'Google Calendar export with weekly reminders'],
   ['Weekly check-in', 'Work search record formatted for your state portal'],
   ['Severance questions and HR email', 'What to ask before you sign'],
@@ -96,6 +97,67 @@ export default function Summary() {
           )}
         </Stat>
       </div>
+
+      <section className="mt-14">
+        <h2 className="text-3xl font-[460] sm:text-4xl">What else we found</h2>
+        <p className="mt-2 text-ink-soft">Free, from the same calculation.</p>
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          <div className="retro-card p-6">
+            <div className="flex items-center gap-2 text-[13px] font-medium text-ink-soft"><Landmark className="size-4 text-brand" /> Unemployment benefits</div>
+            <div className="mt-3 flex items-baseline gap-2"><span className="num text-4xl font-[460] text-brand-deep">{usd(s.unemployment.weeklyBenefit)}</span><span className="text-ink-soft">/ week</span></div>
+            <div className="mt-1 text-sm text-ink-soft">Up to {s.unemployment.maxWeeks} weeks · {usd(s.unemployment.totalPotential)} total{s.unemployment.waitingWeek ? ' · first week unpaid' : ''}</div>
+            <p className="mt-4 text-sm leading-relaxed">{s.unemployment.workSearchRule}</p>
+            <a href={s.unemployment.portalUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-deep hover:text-brand">Open state portal <ExternalLink className="size-3.5" /></a>
+            <div className="mt-3"><Estimate /></div>
+          </div>
+          <div className="retro-card p-6">
+            <div className="flex items-center gap-2 text-[13px] font-medium text-ink-soft"><Wallet className="size-4 text-brand" /> Severance after withholding</div>
+            {s.severance.gross > 0 ? (
+              <>
+                <div className="mt-3 num text-4xl font-[460] text-brand-deep">{usd(s.severance.netEstimate)}</div>
+                <div className="mt-1 text-sm text-ink-soft">of {usd(s.severance.gross)} gross · 22% federal, FICA and state withheld</div>
+                {s.severance.signBy && <p className="mt-4 text-sm leading-relaxed">Decide by <b>{fmtDate(s.severance.signBy)}</b>. Don’t sign on day one: ask HR about extra pay and COBRA help first.</p>}
+              </>
+            ) : (
+              <p className="mt-3 text-sm text-ink-soft">No severance entered.</p>
+            )}
+          </div>
+          <div className="retro-card p-6">
+            <div className="flex items-center gap-2 text-[13px] font-medium text-ink-soft"><CalendarClock className="size-4 text-brand" /> Coming up</div>
+            <ul className="mt-3 divide-y divide-ink/[.06]">
+              {s.upcoming.map((d) => (
+                <li key={d.id} className="flex items-start justify-between gap-3 py-2.5 text-sm">
+                  <span>{d.title}</span>
+                  <span className={`num shrink-0 ${d.daysLeft <= 7 ? 'font-medium text-wine' : 'text-ink-soft'}`}>{d.daysLeft === 0 ? 'today' : `${d.daysLeft}d`}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+          {s.acaQuotes && (
+            <div className="retro-card p-6">
+              <div className="flex items-center gap-2 text-[13px] font-medium text-ink-soft"><Briefcase className="size-4 text-brand" /> Your Marketplace math</div>
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full min-w-[460px] text-sm">
+                  <thead className="text-left text-[12.5px] text-ink-soft"><tr><th className="py-2 font-medium">Year</th><th className="font-medium">Projected income</th><th className="font-medium">Poverty line</th><th className="font-medium">Tax credit</th><th className="font-medium">You pay</th></tr></thead>
+                  <tbody className="num">
+                    {s.acaQuotes.map((q) => (
+                      <tr key={q.year} className="border-t border-ink/[.06]"><td className="py-2.5">{q.year}</td><td>{usd(q.magi)}</td><td>{q.fplPct}%</td><td>{usd(q.subsidyMonthly)}/mo</td><td className="font-semibold text-brand-deep">{usd(q.netMonthly)}/mo</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">Subsidies follow your projected income for each calendar year, so the price changes on January 1. Exact plans at healthcare.gov.</p>
+            </div>
+          )}
+          <div className="retro-card p-6">
+            <div className="flex items-center gap-2 text-[13px] font-medium text-ink-soft"><ListChecks className="size-4 text-brand" /> Do today</div>
+            <div className="mt-2"><Checklist items={s.firstSteps} storageKey={`sedona.today.${caseId}`} /></div>
+          </div>
+        </div>
+      </section>
 
       <div className="retro-card-soft mt-4 p-6">
         <div className="font-medium">Why is the Marketplace so different from COBRA?</div>
