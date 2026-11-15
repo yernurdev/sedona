@@ -123,7 +123,7 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
       aria-pressed={checked}
     >
       {label}
-      <span className={`relative h-6 w-11 rounded-full border border-ink transition-colors ${checked ? 'bg-wine' : 'bg-cream-deep'}`}>
+      <span className={`relative h-6 w-11 rounded-full border border-ink transition-colors ${checked ? 'bg-brand' : 'bg-cream-deep'}`}>
         <span className={`absolute top-0.5 size-4.5 rounded-full border border-ink bg-white transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
       </span>
     </button>
@@ -253,7 +253,7 @@ export default function Quiz() {
         </div>
         <div className="flex flex-1 gap-1">
           {steps.map((_, i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? 'bg-wine' : 'bg-line'}`} />
+            <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? 'bg-brand' : 'bg-line'}`} />
           ))}
         </div>
       </div>

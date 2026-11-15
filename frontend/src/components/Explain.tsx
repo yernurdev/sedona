@@ -9,7 +9,7 @@ export default function Explain({ caseId, topic, label = 'Explain in plain Engli
     <div className="mt-3">
       {!m.data && (
         <button className="btn btn-ghost btn-sm" onClick={() => m.mutate()} disabled={m.isPending}>
-          <Sparkles className="size-4 text-wine" /> {m.isPending ? 'Writing…' : label}
+          <Sparkles className="size-4 text-brand" /> {m.isPending ? 'Writing…' : label}
         </button>
       )}
       {m.error && <ErrorBox error={m.error} onRetry={() => m.mutate()} />}

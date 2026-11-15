@@ -23,7 +23,7 @@ export default function Tax() {
         Filing {t.filingStatus === 'married' ? 'jointly' : 'single'} · projected income {usd(t.projectedIncome)} · taxable after standard deduction {usd(t.taxableIncome)}.
       </SectionTitle>
       <label className="mb-5 flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={wh} onChange={(e) => setWh(e.target.checked)} className="size-4 accent-[var(--color-wine)]" />
+        <input type="checkbox" checked={wh} onChange={(e) => setWh(e.target.checked)} className="size-4 accent-[var(--color-brand)]" />
         I asked my state to withhold 10% from unemployment (Form W-4V)
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -44,7 +44,7 @@ export default function Tax() {
             <div className="mt-2"><Tag tone="wine">no repayment cap since 2026</Tag></div>
           </>
         ) : (
-          <p className="mt-2 text-sm text-ink-soft">Add an offer in <Link className="text-wine underline" to={`/offer/${caseId}`}>Got an offer?</Link> to project your Form 8962 reconciliation.</p>
+          <p className="mt-2 text-sm text-ink-soft">Add an offer in <Link className="text-brand underline" to={`/offer/${caseId}`}>Got an offer?</Link> to project your Form 8962 reconciliation.</p>
         )}
       </div>
       <ul className="mt-5 space-y-1 text-sm text-ink-soft">{t.notes.map((n) => <li key={n}>• {n}</li>)}</ul>

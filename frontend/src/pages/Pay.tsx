@@ -51,7 +51,7 @@ export default function Pay() {
   return (
     <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 md:grid-cols-2">
       <div>
-        <div className="mono-label text-wine">Transition plan</div>
+        <div className="mono-label text-brand">Transition plan</div>
         <h1 className="mt-1 text-4xl font-bold">
           <span className="num">${price.firstMonth}</span> first month
         </h1>
@@ -59,7 +59,7 @@ export default function Pay() {
         <ul className="mt-6 space-y-3">
           {includes.map((i) => (
             <li key={i} className="flex gap-3">
-              <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-wine text-cream"><Check className="size-3" /></span>
+              <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-brand text-white"><Check className="size-3" /></span>
               {i}
             </li>
           ))}
@@ -70,7 +70,7 @@ export default function Pay() {
       <div className="retro-card p-6">
         <div className="flex items-center justify-between">
           <div className="font-semibold">Checkout</div>
-          <Tag tone="wine">Test mode · no real charge</Tag>
+          <Tag tone="brand">Test mode · no real charge</Tag>
         </div>
         <div className="mt-4 rounded-2xl border border-dashed border-ink/40 bg-sky/30 p-4 text-sm">
           <div className="mono-label mb-1">Use the test card</div>

@@ -55,7 +55,7 @@ export default function Summary() {
               if (t === 'spouse' && v == null) return null
               const best = ins.cheapest === t
               return (
-                <div key={t} className={`flex items-baseline justify-between rounded-xl px-3 py-2 ${best ? 'bg-sky/60 ring-1 ring-ink' : ''}`}>
+                <div key={t} className={`flex items-baseline justify-between rounded-xl px-3 py-2 ${best ? 'bg-sky/60 ring-1 ring-brand' : ''}`}>
                   <span className="text-sm font-medium">{optionName[t]}</span>
                   <span className={`num font-bold ${best ? 'text-3xl' : 'text-xl text-ink-soft line-through decoration-wine/50'}`}>{usd(v)}</span>
                 </div>
@@ -64,7 +64,7 @@ export default function Summary() {
           </div>
           {save > 0 && (
             <p className="mt-3 text-sm">
-              Based on your numbers, <b>{optionName[ins.cheapest]}</b> costs <b className="text-wine">{usd(save)}/mo less</b> than COBRA.
+              Based on your numbers, <b>{optionName[ins.cheapest]}</b> costs <b className="text-brand">{usd(save)}/mo less</b> than COBRA.
             </p>
           )}
           <div className="mt-2"><Estimate /></div>
@@ -111,7 +111,7 @@ export default function Summary() {
             </p>
           )}
           <p><b>Runway</b> = week-by-week simulation: savings + net severance + estimated unemployment benefits − (expenses + insurance), assuming no new job.</p>
-          <p>Sources: HHS poverty guidelines, IRS Rev. Proc. 2025-25, KFF benchmark premiums (state average, estimate), CMS age curve, state labor departments. <Link className="text-wine underline" to="/how">All sources</Link></p>
+          <p>Sources: HHS poverty guidelines, IRS Rev. Proc. 2025-25, KFF benchmark premiums (state average, estimate), CMS age curve, state labor departments. <Link className="text-brand underline" to="/how">All sources</Link></p>
         </HowCalc>
       </div>
 

@@ -24,7 +24,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
           <div key={o.type} className={o.type === p.insurance.cheapest ? 'retro-card p-5' : 'retro-card-soft p-5'}>
             <div className="flex items-center justify-between gap-2">
               <div className="font-semibold">{o.label}</div>
-              {o.type === p.insurance.cheapest && <Tag tone="wine">lowest cost</Tag>}
+              {o.type === p.insurance.cheapest && <Tag tone="brand">lowest cost</Tag>}
             </div>
             <div className="num mt-3 text-4xl font-bold">{o.monthly == null ? '—' : usd(o.monthly)}<span className="text-base font-normal text-ink-soft">{o.monthly == null ? '' : '/mo'}</span></div>
             {o.annual != null && <div className="num text-sm text-ink-soft">{usd(o.annual)} per year</div>}
@@ -38,7 +38,7 @@ function Insurance({ p, caseId }: { p: PlanT; caseId: string }) {
         ))}
       </div>
       <div className="retro-card-soft mt-5 p-5">
-        <div className="mono-label text-wine">Insider move</div>
+        <div className="mono-label text-brand">Insider move</div>
         <p className="mt-1">COBRA can be elected retroactively. If nothing happens during your election window, you may never pay for it; if something does, elect and pay back to the day your coverage ended. Many people use this window while their Marketplace plan starts.</p>
       </div>
       {aca?.quotes && (
@@ -93,17 +93,17 @@ function Runway({ p, caseId }: { p: PlanT; caseId: string }) {
             <AreaChart data={data} margin={{ left: 8, right: 8, top: 10 }}>
               <defs>
                 <linearGradient id="cash" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0" stopColor="#A0283D" stopOpacity={0.35} />
+                  <stop offset="0" stopColor="#4E9AFF" stopOpacity={0.35} />
                   <stop offset="1" stopColor="#B8D1FC" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke="#E7D5CB" strokeDasharray="3 4" vertical={false} />
-              <XAxis dataKey="week" tickFormatter={shortDate} tick={{ fontSize: 11, fontFamily: 'JetBrains Mono' }} minTickGap={40} />
-              <YAxis tickFormatter={(v) => `$${Math.round(v / 1000)}k`} tick={{ fontSize: 11, fontFamily: 'JetBrains Mono' }} width={48} />
+              <XAxis dataKey="week" tickFormatter={shortDate} tick={{ fontSize: 11, fontFamily: 'Geist' }} minTickGap={40} />
+              <YAxis tickFormatter={(v) => `$${Math.round(v / 1000)}k`} tick={{ fontSize: 11, fontFamily: 'Geist' }} width={48} />
               <Tooltip formatter={(v) => usd(Number(v))} labelFormatter={(l) => `Week of ${fmtDate(String(l))}`} />
               <ReferenceLine y={0} stroke="#1E1517" />
-              <ReferenceLine x={data.find((d) => d.week >= p.currentDate)?.week} stroke="#A0283D" strokeDasharray="4 4" label={{ value: 'today', fontSize: 11, fill: '#A0283D' }} />
-              <Area type="monotone" dataKey="cash" stroke="#A0283D" strokeWidth={2} fill="url(#cash)" />
+              <ReferenceLine x={data.find((d) => d.week >= p.currentDate)?.week} stroke="#2F80EC" strokeDasharray="4 4" label={{ value: "today", fontSize: 11, fill: "#2F80EC" }} />
+              <Area type="monotone" dataKey="cash" stroke="#4E9AFF" strokeWidth={2} fill="url(#cash)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -245,7 +245,7 @@ function Actions({ p, caseId }: { p: PlanT; caseId: string }) {
       <div className="grid gap-4 md:grid-cols-3">
         {cols.map(([t, items]) => (
           <div key={t} className="retro-card-soft p-5">
-            <div className="mono-label text-wine">{t}</div>
+            <div className="mono-label text-brand">{t}</div>
             <ul className="mt-3 space-y-2 text-sm">{items.length ? items.map((i) => <li key={i}>☐ {i}</li>) : <li className="text-ink-soft">Nothing due.</li>}</ul>
           </div>
         ))}
@@ -294,7 +294,7 @@ export default function Plan() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex gap-1 overflow-x-auto rounded-full border border-ink bg-white p-1 [scrollbar-width:none]">
         {tabs.map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'bg-wine text-cream' : 'hover:bg-cream-deep'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${tab === t ? 'bg-brand text-white' : 'hover:bg-cream-deep'}`}>
             {t}
           </button>
         ))}

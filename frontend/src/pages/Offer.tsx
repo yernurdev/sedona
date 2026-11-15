@@ -154,7 +154,7 @@ export default function Offer() {
               <div key={o.id} className="retro-card-soft p-4">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">{o.input.company || 'Offer'}</div>
-                  <button className="text-ink-soft hover:text-wine" onClick={() => remove.mutate(o.id)} aria-label="Remove"><Trash2 className="size-4" /></button>
+                  <button className="text-ink-soft hover:text-brand" onClick={() => remove.mutate(o.id)} aria-label="Remove"><Trash2 className="size-4" /></button>
                 </div>
                 <div className="num mt-2 text-2xl font-bold">{usd(o.result.effectiveAnnual)}</div>
                 <div className="text-xs text-ink-soft">base {usd(o.input.salary)} · starts {fmtDate(o.input.startDate)}</div>

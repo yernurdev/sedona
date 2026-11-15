@@ -2,12 +2,13 @@ import clsx from 'clsx'
 import { AlertTriangle, Info, Loader2 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 
-export function Tag({ children, tone = 'ink' }: { children: ReactNode; tone?: 'ink' | 'wine' | 'sky' | 'ok' | 'muted' }) {
+export function Tag({ children, tone = 'ink' }: { children: ReactNode; tone?: 'ink' | 'brand' | 'wine' | 'sky' | 'ok' | 'muted' }) {
   return (
     <span
       className={clsx('mono-label inline-flex items-center gap-1 rounded-full border px-2.5 py-1 !text-[10px] whitespace-nowrap', {
         'border-ink bg-ink text-cream': tone === 'ink',
         'border-wine bg-wine/10 text-wine': tone === 'wine',
+        'border-brand bg-brand/10 text-brand-deep': tone === 'brand',
         'border-sky-deep bg-sky/60 text-ink': tone === 'sky',
         'border-ok/40 bg-ok/10 text-ok': tone === 'ok',
         'border-line bg-white text-ink-soft': tone === 'muted',
@@ -49,7 +50,7 @@ export function HowCalc({ title = 'How we calculated this', children }: { title?
   return (
     <div className="mt-3">
       <button
-        className="mono-label inline-flex items-center gap-1.5 text-ink-soft underline decoration-dotted underline-offset-4 hover:text-wine"
+        className="mono-label inline-flex items-center gap-1.5 text-ink-soft underline decoration-dotted underline-offset-4 hover:text-brand"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
@@ -63,7 +64,7 @@ export function HowCalc({ title = 'How we calculated this', children }: { title?
 export function Src({ href, children = 'source' }: { href?: string; children?: ReactNode }) {
   if (!href) return null
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="text-wine underline underline-offset-2">
+    <a href={href} target="_blank" rel="noreferrer" className="text-brand underline underline-offset-2">
       {children}
     </a>
   )
@@ -72,7 +73,7 @@ export function Src({ href, children = 'source' }: { href?: string; children?: R
 export function SectionTitle({ kicker, title, children }: { kicker: string; title: string; children?: ReactNode }) {
   return (
     <div className="mb-5">
-      <div className="mono-label text-wine">{kicker}</div>
+      <div className="mono-label text-brand">{kicker}</div>
       <h2 className="mt-1 text-2xl font-semibold sm:text-3xl">{title}</h2>
       {children && <p className="mt-2 max-w-2xl text-ink-soft">{children}</p>}
     </div>

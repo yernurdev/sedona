@@ -63,7 +63,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <img src="/logo.png" alt="Sedona" className="h-9 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
-            <Link to="/how" className="mono-label hidden text-ink-soft hover:text-wine sm:inline">
+            <Link to="/how" className="mono-label hidden text-ink-soft hover:text-brand sm:inline">
               How we calculate
             </Link>
             <Link to="/start" className="btn btn-primary btn-sm">

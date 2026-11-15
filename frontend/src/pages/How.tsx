@@ -33,7 +33,7 @@ export default function How() {
                   <td className="p-3">{s.dataset}</td>
                   <td className="num">{s.asOf}</td>
                   <td>{s.estimate ? <Tag tone="muted">estimate</Tag> : <Tag tone="ok">official</Tag>}</td>
-                  <td className="max-w-xs truncate"><a className="text-wine underline" href={s.source} target="_blank" rel="noreferrer">{new URL(s.source).hostname}</a></td>
+                  <td className="max-w-xs truncate"><a className="text-brand underline" href={s.source} target="_blank" rel="noreferrer">{new URL(s.source).hostname}</a></td>
                 </tr>
               ))}
             </tbody>

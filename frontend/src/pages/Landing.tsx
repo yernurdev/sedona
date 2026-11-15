@@ -10,8 +10,8 @@ function Sun() {
     <svg viewBox="0 0 200 100" className="w-full" aria-hidden>
       <defs>
         <linearGradient id="sunfill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#A0283D" />
-          <stop offset="1" stopColor="#D4637A" />
+          <stop offset="0" stopColor="#2F80EC" />
+          <stop offset="1" stopColor="#9CC7FF" />
         </linearGradient>
         <clipPath id="half">
           <rect x="0" y="0" width="200" height="100" />
@@ -47,12 +47,12 @@ export default function Landing() {
         <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pb-20 pt-12 md:grid-cols-[1.15fr_.85fr] md:pt-20">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}>
             <div className="mono-label inline-flex items-center gap-2 rounded-full border border-ink bg-white px-3 py-1.5">
-              <span className="size-2 rounded-full bg-wine" /> For US workers who just got laid off
+              <span className="size-2 rounded-full bg-brand" /> For US workers who just got laid off
             </div>
             <h1 className="mt-6 text-[2.6rem] font-bold leading-[1.02] sm:text-6xl">
               Got laid off?
               <br />
-              <span className="text-wine">Your next 60 days,</span>
+              <span className="text-brand">Your next 60 days,</span>
               <br />
               decoded.
             </h1>
@@ -79,7 +79,7 @@ export default function Landing() {
           >
             <div className="mono-label flex items-center justify-between text-ink-soft">
               <span>Sedona readout</span>
-              <span className="text-wine">● live math</span>
+              <span className="text-brand">● live math</span>
             </div>
             <div className="mx-auto mt-4 w-48"><Sun /></div>
             <dl className="mt-4 space-y-3">
@@ -102,7 +102,7 @@ export default function Landing() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="mono-label text-wine">One event, start to finish</div>
+        <div className="mono-label text-brand">One event, start to finish</div>
         <h2 className="mt-1 max-w-2xl text-3xl font-semibold">6–8 money decisions in 60 days. In panic. With no one on your side.</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
