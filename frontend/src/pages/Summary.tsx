@@ -87,7 +87,7 @@ export default function Summary() {
         <Stat k="Next deadline" delay={0.12}>
           {nd ? (
             <>
-              <div className={`num text-5xl font-semibold ${nd.daysLeft <= 7 ? 'text-wine' : 'text-brand-deep'}`}>{nd.daysLeft === 0 ? 'Today' : `${nd.daysLeft} days`}</div>
+              <div className={`num text-5xl font-semibold ${nd.daysLeft <= 7 ? 'text-wine' : 'text-brand-deep'}`}>{nd.daysLeft === 0 ? 'Today' : nd.daysLeft === 1 ? '1 day' : `${nd.daysLeft} days`}</div>
               <div className="mt-3 text-lg font-medium leading-snug">{nd.title}</div>
               <div className="mt-1 text-sm text-ink-soft">{fmtDate(nd.date)} · {days(nd.daysLeft)}</div>
               <p className="mt-4 text-sm text-ink-soft">{Math.max(0, s.deadlineCount - 1)} more deadlines in your full plan.</p>

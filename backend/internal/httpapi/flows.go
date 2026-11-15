@@ -477,6 +477,10 @@ func (s *Server) testCheckout(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusNotFound, "not_found", "Case not found.")
 		return
 	}
+	if c.Paid {
+		writeJSON(w, http.StatusOK, map[string]any{"paid": true, "charged": 0, "currency": "usd", "testMode": true})
+		return
+	}
 	card := strings.NewReplacer(" ", "", "-", "").Replace(body.Card)
 	if card != "4242424242424242" {
 		writeErr(w, http.StatusPaymentRequired, "card_declined", "Test mode: only the test card 4242 4242 4242 4242 is accepted. No real cards.")
@@ -486,7 +490,7 @@ func (s *Server) testCheckout(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusBadRequest, "invalid_card", "Enter any future expiry (MM/YY) and any 3-digit CVC.")
 		return
 	}
-	if err := s.Store.CreatePayment(r.Context(), c.ID, "test_"+c.ID+"_"+fmt.Sprint(time.Now().Unix())); err != nil {
+	if err := s.Store.CreatePayment(r.Context(), c.ID, "test_"+store.NewID()); err != nil {
 		s.internal(w, r, err)
 		return
 	}

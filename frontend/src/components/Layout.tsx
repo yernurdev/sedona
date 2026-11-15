@@ -55,6 +55,44 @@ function CaseNav({ caseId }: { caseId: string }) {
   )
 }
 
+const LAST_CASE = 'sedona.lastCase'
+
+function lastCase(): string | null {
+  try {
+    return localStorage.getItem(LAST_CASE)
+  } catch {
+    return null
+  }
+}
+
+function HeaderCTA({ caseId }: { caseId?: string }) {
+  const info = useCaseInfo(caseId ?? '', !!caseId)
+  useEffect(() => {
+    if (caseId && info.data) {
+      try {
+        localStorage.setItem(LAST_CASE, caseId)
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [caseId, info.data])
+  const arrow = <span className="arrow"><ArrowUpRight className="size-3.5" /></span>
+  if (caseId) {
+    if (!info.data) return <span className="h-11 w-32" />
+    return info.data.paid ? (
+      <Link to={`/plan/${caseId}`} className="btn btn-dark btn-sm h-11">My plan {arrow}</Link>
+    ) : (
+      <Link to={`/pay/${caseId}`} className="btn btn-primary btn-sm h-11">Unlock full plan · $39 {arrow}</Link>
+    )
+  }
+  const last = lastCase()
+  return last ? (
+    <Link to={`/summary/${last}`} className="btn btn-dark btn-sm h-11">Continue my plan {arrow}</Link>
+  ) : (
+    <Link to="/start" className="btn btn-dark btn-sm h-11">Get started {arrow}</Link>
+  )
+}
+
 export default function Layout({ children }: { children: ReactNode }) {
   const { caseId } = useParams()
   const [scrolled, setScrolled] = useState(false)
@@ -73,12 +111,11 @@ export default function Layout({ children }: { children: ReactNode }) {
             <img src="/logo.png" alt="Sedona" className="h-[52px] w-auto max-w-none" />
           </Link>
           <nav className="hidden h-11 items-center gap-1 rounded-[15px] bg-[#EDEDEE]/90 px-2 text-[13px] backdrop-blur md:flex">
+            {caseId && <Link to={`/summary/${caseId}`} className="rounded-[9px] px-3 py-1.5 text-ink-soft hover:bg-white hover:text-ink">My numbers</Link>}
             <Link to="/how" className="rounded-[9px] px-3 py-1.5 text-ink-soft hover:bg-white hover:text-ink">How we calculate</Link>
-            <Link to="/start" className="rounded-[9px] px-3 py-1.5 text-ink-soft hover:bg-white hover:text-ink">Start a plan</Link>
+            <Link to="/start" className="rounded-[9px] px-3 py-1.5 text-ink-soft hover:bg-white hover:text-ink">{caseId ? 'New plan' : 'Start a plan'}</Link>
           </nav>
-          <Link to="/start" className="btn btn-dark btn-sm h-11">
-            Get started <span className="arrow"><ArrowUpRight className="size-3.5" /></span>
-          </Link>
+          <HeaderCTA caseId={caseId} />
         </div>
         {caseId && <CaseNav caseId={caseId} />}
       </header>

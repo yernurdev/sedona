@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api, post } from './client'
 import type { CaseInfo, CheckinList, Plan, StateMeta, Summary, TaxPreview, OfferInput, OfferResult } from './types'
 
-export const useCaseInfo = (id: string) => useQuery({ queryKey: ['case', id], queryFn: () => api<CaseInfo>(`/cases/${id}`) })
+export const useCaseInfo = (id: string, enabled = true) => useQuery({ queryKey: ['case', id], queryFn: () => api<CaseInfo>(`/cases/${id}`), enabled: enabled && !!id })
 export const useSummary = (id: string) => useQuery({ queryKey: ['summary', id], queryFn: () => api<Summary>(`/cases/${id}/summary`) })
 export const usePlan = (id: string, enabled = true) =>
   useQuery({ queryKey: ['plan', id], queryFn: () => api<Plan>(`/cases/${id}/plan`), enabled, retry: false })
